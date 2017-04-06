@@ -1,5 +1,6 @@
 package com.gang.api;
 
+import com.gang.core.StringNotFoundException;
 import com.gang.domain.Champion.ChampionEntity;
 import com.gang.domain.Champion.ChampionService;
 import io.swagger.annotations.Api;
@@ -25,7 +26,7 @@ public class ChampionController {
 
     @RequestMapping(value = "/save",method = RequestMethod.GET)
     @ApiOperation(value = " 현재 롤 챔피언 정보", notes = "현재 롤 챔피언 정보 저장")
-    public List<ChampionEntity> ChampionSave() throws RiotApiException {
+    public List<ChampionEntity> ChampionSave() throws RiotApiException,StringNotFoundException,InterruptedException{
         try {
             return championService.list();
         } catch (RiotApiException e) {
