@@ -1,5 +1,6 @@
 package com.gang.domain.summoner;
 
+import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SummonerRepository extends JpaRepository<SummonerEntity,Integer> {
-
+    Summoner findByName(String name);
 }
