@@ -1,9 +1,13 @@
 package com.gang;
 
-import net.rithms.riot.constant.PlatformId;
+import net.rithms.riot.api.RiotApi;
+import net.rithms.riot.api.RiotApiException;
+import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.Map;
 
 @SpringBootApplication
 public class CoreServerApplication {
@@ -12,11 +16,13 @@ public class CoreServerApplication {
 
 		SpringApplication.run(CoreServerApplication.class, args);
 
-		ApiConfig config = new ApiConfig().setKey("RGAPI-e8372943-2ac3-4bed-8d2c-86f9c86174fe");
-		RiotApi api = new RiotApi(config);
-
-		Summoner summoner = api.getSummonerByName(PlatformId.KR, "tryndamere");
-		System.out.println("Name: " + summoner.getName() + ", ID: " + summoner.getId());
-
+		RiotApi api = new RiotApi("RGAPI-e8372943-2ac3-4bed-8d2c-86f9c86174fe");
+		try {
+			Summoner summoner = api.getSummonerByName(Region.KR, "Bvest");
+			long id = summoner.getId();
+			System.out.println(id);
+		}catch(RiotApiException e){
+			System.out.println(e);
+		}
 	}
 }
