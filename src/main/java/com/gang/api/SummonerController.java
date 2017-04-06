@@ -1,6 +1,7 @@
 package com.gang.api;
 
 import com.gang.domain.summoner.SummonerService;
+import io.swagger.annotations.Api;
 import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Junwoo on 2017-04-07.
  */
 @RestController
-@RequestMapping("summoner")
+@Api(value = "summoner", description = "소환사 API", basePath= "/api/summoner")
+@RequestMapping("/api/summoner")
 public class SummonerController {
 
     @Autowired
