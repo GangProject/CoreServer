@@ -1,5 +1,7 @@
 package com.gang.domain.Champion;
 
+import com.gang.core.RiotApiManager;
+import com.gang.core.StringNotFoundException;
 import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;
@@ -21,12 +23,14 @@ public class ChampionService {
 
     @Autowired
     private ChampionEntityRepository championEntityRepository;
+    @Autowired
+    private RiotApiManager riotApiManager;
 
     //현재 LOL에 있는 챔피언 아이디 값과 이름값 디비에 저장
-    public List<ChampionEntity> list() throws RiotApiException {
+    public List<ChampionEntity> list() throws RiotApiException,StringNotFoundException,InterruptedException{
         RiotApi api = new RiotApi("RGAPI-e8372943-2ac3-4bed-8d2c-86f9c86174fe");
         ChampionList championList;
-        championList = api.getDataChampionList(Region.KR, "", "", false, ChampData.ALL);
+        championList = riotApiManager.getDataChampionList(Region.KR,ChampData.ALL);
         System.out.print(championList.getKeys().values());
         Iterator<String> iterator = championList.getKeys().values().iterator();
         while (iterator.hasNext()) {
