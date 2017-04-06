@@ -1,4 +1,4 @@
-package com.gang.util;
+package com.gang.core.constant;
 
 import org.springframework.stereotype.Component;
 

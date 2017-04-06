@@ -1,4 +1,4 @@
-package com.gang.domain.summoner;
+package com.gang.core.api.endpoints.summoner.dto;
 
 import lombok.*;
 
@@ -17,8 +17,9 @@ import javax.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name ="Summoner")
-public class Summoner {
+@Table(name ="summoner")
+public class Summoner{
+
     @Id
     @Column(name="id")
     private long id;

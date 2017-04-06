@@ -1,4 +1,4 @@
-package com.gang.domain;
+package com.gang.core;
 
 /**
  * Created by Administrator on 2017-04-03.

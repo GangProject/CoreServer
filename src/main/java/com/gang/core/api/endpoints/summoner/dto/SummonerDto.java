@@ -1,4 +1,4 @@
-package com.gang.domain.summoner;
+package com.gang.core.api.endpoints.summoner.dto;
 
 import lombok.Builder;
 import lombok.Getter;
