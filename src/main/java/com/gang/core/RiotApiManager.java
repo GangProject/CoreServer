@@ -15,7 +15,7 @@ import java.io.InterruptedIOException;
 import java.io.Serializable;
 
 /**
- * Created by Junwoo on 2017-04-07.
+ * Created by Junwoo & Seungi on 2017-04-07.
  */
 @Component
 public class RiotApiManager implements Serializable{
