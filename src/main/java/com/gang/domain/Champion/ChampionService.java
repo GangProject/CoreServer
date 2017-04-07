@@ -1,6 +1,7 @@
 package com.gang.domain.Champion;
 
 import com.gang.core.StringNotFoundException;
+import com.gang.core.manager.ChampionApiManager;
 import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;

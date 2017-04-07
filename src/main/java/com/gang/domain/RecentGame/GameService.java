@@ -1,5 +1,6 @@
 package com.gang.domain.RecentGame;
 
+import com.gang.core.manager.GameApiManager;
 import com.gang.core.manager.SummonerApiManager;
 import com.gang.domain.Champion.ChampionEntityRepository;
 import net.rithms.riot.constant.Region;

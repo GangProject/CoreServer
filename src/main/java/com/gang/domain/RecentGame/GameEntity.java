@@ -46,6 +46,8 @@ public class GameEntity {
     @Column(name = "teamId")
     private int teamId;
 
+
+
     public static GameEntity of(Game game, Long id, ChampionEntity championEntity){
         return GameEntity.builder()
                 .gameid(game.getGameId())
