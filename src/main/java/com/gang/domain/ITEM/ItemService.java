@@ -1,6 +1,5 @@
 package com.gang.domain.ITEM;
 
-import com.gang.core.RiotApiManager;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Static.Item;
 import net.rithms.riot.dto.Static.ItemList;
@@ -17,13 +16,13 @@ import java.util.List;
 public class ItemService {
 
     @Autowired
-    private RiotApiManager riotApiManager;
+    private ItemApiManager itemApiManager;
 
     @Autowired
     private ItemEntityRepository itemEntityRepository;
 
     public List<ItemEntity> recentItem() throws Exception{
-        ItemList itemList=riotApiManager.getDataItemList(Region.KR);
+        ItemList itemList=itemApiManager.getDataItemList(Region.KR);
         Iterator<Item> iterator=itemList.getData().values().iterator();
         while(iterator.hasNext()){
             Item item =iterator.next();

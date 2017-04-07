@@ -22,7 +22,6 @@ import java.io.Serializable;
 /**
  * Created by Junwoo & Seungi on 2017-04-07.
  */
-@Component
 public class RiotApiManager implements Serializable{
     private static final long serialVersionUID = -3301605591108950415L;
 
@@ -45,86 +44,5 @@ public class RiotApiManager implements Serializable{
         currentKey = (currentKey+1)%keyLength; //키 인덱스 돌리고
         key = Key.getKeyById(currentKey); //key 구해서
         api.setKey(key.getKey()); //set Key !
-    }
-
-    public List<League> getLeagueBySummoner(long summonerId) throws StringNotFoundException,InterruptedException{
-        List<League> leagues = null;
-        Boolean success = false;
-
-        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
-            System.out.println(key.toString());
-            try {
-                System.out.print(summonerId);
-                leagues = api.getLeagueEntryBySummoner(summonerId);
-                success = true;
-            } catch (RateLimitException e) { //key 요청 횟수 초과시
-                System.out.println("key 바꿈");
-                changeKey();
-                Thread.sleep(1000); //1초 동안 sleep
-            } catch (RiotApiException e) {
-                System.out.println(e);
-            }
-        }
-
-        return leagues;
-    }
-
-    public ChampionList getDataChampionList(Region region,ChampData champData) throws StringNotFoundException,InterruptedException{
-        ChampionList championList = null;
-        Boolean success = false;
-
-        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
-            System.out.println(key.toString());
-            try {
-                championList = api.getDataChampionList(Region.KR, "", "", false, ChampData.ALL);
-                success = true;
-            } catch (RateLimitException e) { //key 요청 횟수 초과시
-                System.out.println("key 바꿈");
-                changeKey();
-                Thread.sleep(1000); //1초 동안 sleep
-            } catch (RiotApiException e) {
-                System.out.println(e);
-            }
-        }
-
-        return championList;
-    }
-    public RecentGames getRecentGames(Region region,long id) throws Exception{
-        RecentGames recentGames=null;
-        Boolean success = false;
-        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
-            System.out.println(key.toString());
-            try {
-                recentGames = api.getRecentGames(Region.KR,id);
-                success = true;
-            } catch (RateLimitException e) { //key 요청 횟수 초과시
-                System.out.println("key 바꿈");
-                changeKey();
-                Thread.sleep(1000); //1초 동안 sleep
-            } catch (RiotApiException e) {
-                System.out.println(e);
-            }
-        }
-
-        return recentGames;
-    }
-    public ItemList getDataItemList(Region region) throws Exception{
-        ItemList itemList=null;
-        Boolean success = false;
-        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
-            System.out.println(key.toString());
-            try {
-                itemList = api.getDataItemList(Region.KR);
-                success = true;
-            } catch (RateLimitException e) { //key 요청 횟수 초과시
-                System.out.println("key 바꿈");
-                changeKey();
-                Thread.sleep(1000); //1초 동안 sleep
-            } catch (RiotApiException e) {
-                System.out.println(e);
-            }
-        }
-
-        return itemList;
     }
 }
