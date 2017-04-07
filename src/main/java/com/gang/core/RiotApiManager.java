@@ -9,10 +9,12 @@ import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.constant.staticdata.ChampData;
 import net.rithms.riot.dto.Game.RecentGames;
+import net.rithms.riot.dto.League.League;
 import net.rithms.riot.dto.Static.ChampionList;
 import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.io.InterruptedIOException;
 import java.io.Serializable;
 
@@ -56,7 +58,7 @@ public class RiotApiManager implements Serializable{
             } catch (RateLimitException e) { //key 요청 횟수 초과시
                 System.out.println("key 바꿈");
                 changeKey();
-                Thread.sleep(1000); //2초 동안 sleep
+                Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
                 System.out.println(e);
             }
@@ -64,6 +66,29 @@ public class RiotApiManager implements Serializable{
 
         return summoner;
     }
+
+    public List<League> getLeagueBySummoner(long summonerId) throws StringNotFoundException,InterruptedException{
+        List<League> leagues = null;
+        Boolean success = false;
+
+        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
+            System.out.println(key.toString());
+            try {
+                leagues = api.getLeagueBySummoner
+                leagues = api.getLeagueBySummoner(summonerId);
+                success = true;
+            } catch (RateLimitException e) { //key 요청 횟수 초과시
+                System.out.println("key 바꿈");
+                changeKey();
+                Thread.sleep(1000); //1초 동안 sleep
+            } catch (RiotApiException e) {
+                System.out.println(e);
+            }
+        }
+
+        return leagues;
+    }
+
     public ChampionList getDataChampionList(Region region,ChampData champData) throws StringNotFoundException,InterruptedException{
         ChampionList championList = null;
         Boolean success = false;
@@ -76,7 +101,7 @@ public class RiotApiManager implements Serializable{
             } catch (RateLimitException e) { //key 요청 횟수 초과시
                 System.out.println("key 바꿈");
                 changeKey();
-                Thread.sleep(2000); //2초 동안 sleep
+                Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
                 System.out.println(e);
             }
@@ -95,7 +120,7 @@ public class RiotApiManager implements Serializable{
             } catch (RateLimitException e) { //key 요청 횟수 초과시
                 System.out.println("key 바꿈");
                 changeKey();
-                Thread.sleep(000); //2초 동안 sleep
+                Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
                 System.out.println(e);
             }

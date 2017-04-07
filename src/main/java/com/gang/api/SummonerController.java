@@ -1,5 +1,6 @@
 package com.gang.api;
 
+import com.gang.api.common.ResponseDto;
 import com.gang.domain.summoner.SummonerService;
 import io.swagger.annotations.Api;
 import net.rithms.riot.api.RiotApi;
@@ -23,12 +24,12 @@ public class SummonerController {
     @Autowired
     SummonerService summonerService;
 
-    @GetMapping("/save")
-    public void byName(@RequestParam(value = "name")String name){
+    @GetMapping("/info")
+    public ResponseDto byName(@RequestParam(value = "name")String name){
         try{
-            summonerService.saveSummonerEntity(name);
+            return summonerService.infoSummoner(name);
         }catch(Exception e){
-
+            return ResponseDto.ofFailure("실패했습니다.");
         }
     }
 }
