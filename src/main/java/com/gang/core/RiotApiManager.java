@@ -11,6 +11,7 @@ import net.rithms.riot.constant.staticdata.ChampData;
 import net.rithms.riot.dto.Game.RecentGames;
 import net.rithms.riot.dto.League.League;
 import net.rithms.riot.dto.Static.ChampionList;
+import net.rithms.riot.dto.Static.ItemList;
 import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.stereotype.Component;
 
@@ -127,5 +128,24 @@ public class RiotApiManager implements Serializable{
         }
 
         return recentGames;
+    }
+    public ItemList getDataItemList(Region region) throws Exception{
+        ItemList itemList=null;
+        Boolean success = false;
+        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
+            System.out.println(key.toString());
+            try {
+                itemList = api.getDataItemList(Region.KR);
+                success = true;
+            } catch (RateLimitException e) { //key 요청 횟수 초과시
+                System.out.println("key 바꿈");
+                changeKey();
+                Thread.sleep(1000); //1초 동안 sleep
+            } catch (RiotApiException e) {
+                System.out.println(e);
+            }
+        }
+
+        return itemList;
     }
 }

@@ -1,0 +1,34 @@
+package com.gang.domain.ITEM;
+
+import com.gang.core.RiotApiManager;
+import net.rithms.riot.constant.Region;
+import net.rithms.riot.dto.Static.Item;
+import net.rithms.riot.dto.Static.ItemList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Created by seungki on 2017-04-07.
+ */
+@Service
+public class ItemService {
+
+    @Autowired
+    private RiotApiManager riotApiManager;
+
+    @Autowired
+    private ItemEntityRepository itemEntityRepository;
+
+    public List<ItemEntity> recentItem() throws Exception{
+        ItemList itemList=riotApiManager.getDataItemList(Region.KR);
+        Iterator<Item> iterator=itemList.getData().values().iterator();
+        while(iterator.hasNext()){
+            Item item =iterator.next();
+            itemEntityRepository.save(ItemEntity.of(item));
+        }
+        return itemEntityRepository.findAll();
+    }
+}
