@@ -26,10 +26,10 @@ import java.io.Serializable;
 public class RiotApiManager implements Serializable{
     private static final long serialVersionUID = -3301605591108950415L;
 
-    private RiotApi api = null;
-    private Key key = null;
-    private int currentKey;
-    private int keyLength;
+    protected RiotApi api = null;
+    protected Key key = null;
+    protected int currentKey;
+    protected int keyLength;
 
     //최초 생성.
     public RiotApiManager() throws StringNotFoundException{
@@ -45,27 +45,6 @@ public class RiotApiManager implements Serializable{
         currentKey = (currentKey+1)%keyLength; //키 인덱스 돌리고
         key = Key.getKeyById(currentKey); //key 구해서
         api.setKey(key.getKey()); //set Key !
-    }
-
-    public Summoner getSummonerByName(Region region, String name) throws StringNotFoundException,InterruptedException{
-        Summoner summoner = null;
-        Boolean success = false;
-
-        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
-            System.out.println(key.toString());
-            try {
-                summoner = api.getSummonerByName(region, name);
-                success = true;
-            } catch (RateLimitException e) { //key 요청 횟수 초과시
-                System.out.println("key 바꿈");
-                changeKey();
-                Thread.sleep(1000); //1초 동안 sleep
-            } catch (RiotApiException e) {
-                System.out.println(e);
-            }
-        }
-
-        return summoner;
     }
 
     public List<League> getLeagueBySummoner(long summonerId) throws StringNotFoundException,InterruptedException{

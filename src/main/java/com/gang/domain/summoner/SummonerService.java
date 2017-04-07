@@ -5,6 +5,7 @@ import com.gang.api.common.ResponseDto;
 import com.gang.core.AnalyzeUtil;
 import com.gang.core.RiotApiManager;
 import com.gang.core.StringNotFoundException;
+import com.gang.core.manager.SummonerApiManager;
 import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.League.League;
@@ -23,7 +24,7 @@ public class SummonerService {
     private AnalyzeUtil analyzeUtil;
 
     @Autowired
-    private RiotApiManager riotApiManager;
+    private SummonerApiManager riotApiManager;
 
     @Autowired
     private SummonerRepository summonerRepository;
@@ -39,7 +40,7 @@ public class SummonerService {
             summonerRepository.save(SummonerEntity.of(summoner));
         }
 
-        leagues = riotApiManager.getLeagueBySummoner(summoner.getId());
+        //leagues = riotApiManager.getLeagueBySummoner(summoner.getId());
         analyzeUtil.analyzeExcute(summoner, leagues);
 
         return ResponseDto.ofSuccess("성공");
