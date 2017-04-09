@@ -35,7 +35,26 @@ public class SummonerApiManager extends RiotApiManager {
                 System.out.println(e);
             }
         }
+        return summoner;
+    }
 
+    public Summoner getSummonerById(Region region, long id) throws StringNotFoundException,InterruptedException{
+        Summoner summoner = null;
+        Boolean success = false;
+
+        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
+            System.out.println(key.toString());
+            try {
+                summoner = api.getSummonerById(region, id);
+                success = true;
+            } catch (RateLimitException e) { //key 요청 횟수 초과시
+                System.out.println("key 바꿈");
+                changeKey();
+                Thread.sleep(1000); //1초 동안 sleep
+            } catch (RiotApiException e) {
+                System.out.println(e);
+            }
+        }
         return summoner;
     }
 }

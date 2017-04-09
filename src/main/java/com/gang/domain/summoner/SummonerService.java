@@ -27,6 +27,9 @@ public class SummonerService {
     @Autowired
     private SummonerApiManager summonerApiManager;
 
+    @Autowired
+    private LeagueApiManager leagueApiManager;
+
     //@Autowired
     //private LeagueApiManager leagueApiManager;
 
@@ -44,7 +47,7 @@ public class SummonerService {
             summonerRepository.save(SummonerEntity.of(summoner));
         }
 
-        //leagues = leagueApiManager.getLeagueBySummoner(summoner.getId());
+        leagues = leagueApiManager.getLeagueEntryBySummoner(Region.KR, String.valueOf(summoner.getId()));
         analyzeUtil.analyzeExcute(summoner, leagues);
 
         return ResponseDto.ofSuccess("성공");
