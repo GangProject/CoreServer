@@ -1,6 +1,7 @@
 package com.gang.domain.RecentGame;
 
 import com.gang.domain.Champion.ChampionEntity;
+import com.gang.domain.Spell.SpellEntity;
 import lombok.*;
 import net.rithms.riot.dto.Game.Game;
 
@@ -46,9 +47,13 @@ public class GameEntity {
     @Column(name = "teamId")
     private int teamId;
 
+    @Column(name = "spell1")
+    private String spell1;
 
+    @Column(name = "spell2")
+    private String spell2;
 
-    public static GameEntity of(Game game, Long id, ChampionEntity championEntity){
+    public static GameEntity of(Game game, Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2){
         return GameEntity.builder()
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())
@@ -58,6 +63,8 @@ public class GameEntity {
                 .teamId(game.getTeamId())
                 .summonerid(id)
                 .champion(championEntity.getName())
+                .spell1(spellEntity1.getName())
+                .spell2(spellEntity2.getName())
                 .build();
     }
 
