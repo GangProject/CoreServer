@@ -7,5 +7,5 @@ package com.gang.domain.ITEM;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ItemEntityRepository extends JpaRepository<ItemEntity,Integer>{
-
+    ItemEntity findByItemid(int id);
 }
