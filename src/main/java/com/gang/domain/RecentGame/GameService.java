@@ -5,10 +5,13 @@ import com.gang.core.manager.SummonerApiManager;
 import com.gang.domain.Champion.ChampionEntity;
 import com.gang.domain.Champion.ChampionEntityRepository;
 import com.gang.domain.ITEM.ItemEntityRepository;
+import com.gang.domain.Player.PlayerEntity;
+import com.gang.domain.Player.PlayerEntityRepository;
 import com.gang.domain.Spell.SpellEntity;
 import com.gang.domain.Spell.SpellRepository;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Game.Game;
+import net.rithms.riot.dto.Game.Player;
 import net.rithms.riot.dto.Game.RawStats;
 import net.rithms.riot.dto.Game.RecentGames;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +43,13 @@ public class GameService {
     private SpellRepository spellRepository;
     @Autowired
     private ItemEntityRepository itemEntityRepository;
-
+    @Autowired
+    private PlayerEntityRepository playerEntityRepository;
     public List<GameEntity> gameList(String name) throws Exception{
         long id = summonerApiManager.getSummonerByName(Region.KR,name).getId();
         RecentGames game=gameApiManager.getRecentGames(Region.KR,id);
         Iterator<Game> iterator=game.getGames().iterator();
+        List<PlayerEntity> plist=new ArrayList<>();
         RawStats itemList = null;
         while(iterator.hasNext()){
             Game g=iterator.next();
@@ -54,7 +59,8 @@ public class GameService {
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
             HashMap<String,String> itemName = itemName(g);
             String k=timeChange(g);
-            gameEntityRepository.save(GameEntity.of(g,k,id,champ_id,spell1,spell2,itemName));
+
+            gameEntityRepository.save(GameEntity.of(g,k,id,champ_id,spell1,spell2,itemName,playerEntityRepository.findByGameidOrderByTeamid(g)));
         }
         System.out.print("here");
         return gameEntityRepository.findBySummonerid(id);
@@ -118,8 +124,14 @@ public class GameService {
             t=time+"시간전";
             return t;
         }
-
-
-
+    }
+    public List<PlayerEntity> player(Game game){
+        Iterator<Player> plist = game.getFellowPlayers().iterator();
+        List<PlayerEntity> list = new ArrayList<>();
+        while(plist.hasNext()){
+            Player p = plist.next();
+            list.add(playerEntityRepository.save(PlayerEntity.of(game,p)));
+        }
+        return list;
     }
 }

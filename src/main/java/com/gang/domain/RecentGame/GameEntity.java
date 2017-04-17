@@ -1,12 +1,15 @@
 package com.gang.domain.RecentGame;
 
 import com.gang.domain.Champion.ChampionEntity;
+import com.gang.domain.Player.PlayerEntity;
 import com.gang.domain.Spell.SpellEntity;
 import lombok.*;
 import net.rithms.riot.dto.Game.Game;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -85,7 +88,11 @@ public class GameEntity {
     @Column(name = "gameassist")
     private  int assist;
 
-    public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem){
+    @Transient
+    List<PlayerEntity> plist = new ArrayList<>();
+
+    public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem,
+                                List<PlayerEntity> p){
         return GameEntity.builder()
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())
@@ -104,6 +111,7 @@ public class GameEntity {
                 .item4(gameItem.get("item4"))
                 .item5(gameItem.get("item5"))
                 .item6(gameItem.get("item6"))
+                .plist(p)
                 .kill(game.getStats().getChampionsKilled())
                 .death(game.getStats().getNumDeaths())
                 .assist(game.getStats().getAssists())
