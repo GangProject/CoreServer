@@ -46,26 +46,34 @@ public class GameService {
     @Autowired
     private PlayerEntityRepository playerEntityRepository;
 
-    public List<ResposeGame> gameList(String name) throws Exception{
-        long id = summonerApiManager.getSummonerByName(Region.KR,name).getId();
-        RecentGames game=gameApiManager.getRecentGames(Region.KR,id);
-        Iterator<Game> iterator=game.getGames().iterator();
-        List<ResposeGame> recent_list =new ArrayList<>();
-        RawStats itemList = null;
-        while(iterator.hasNext()){
-            Game g=iterator.next();
-            ChampionEntity champ_id=championEntityRepository.findByChampid(g.getChampionId());
-            SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
-            SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
-            HashMap<String,String> itemName = itemName(g);
-            String k=timeChange(g);
-            player(g,name);
-            gameEntityRepository.save(GameEntity.of(g,k,id,champ_id,spell1,spell2,itemName));
-        }
-
-        recent_list=recent (gameEntityRepository.findBySummonerid(id));
+    public List<ResposeGame> gameList(String name) throws Exception {
+        long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
+        RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
+        Iterator<Game> iterator = game.getGames().iterator();
+        List<ResposeGame> recent_list = new ArrayList<>();
+        iteratorGame(iterator,name,id);
+        recent_list = recent(gameEntityRepository.findBySummonerid(id));
         return recent_list;
     }
+
+    public List<ResposeGame> dbgameList(String name) throws Exception {
+        long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
+        List<ResposeGame> recent_list = new ArrayList<>();
+        List<GameEntity> list= gameEntityRepository.findBySummonerid(id);
+        if (list.size()==0) {
+            System.out.println("here");
+            RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
+            Iterator<Game> iterator = game.getGames().iterator();
+            iteratorGame(iterator,name,id);
+            recent_list = recent(gameEntityRepository.findBySummonerid(id));
+            return recent_list;
+        }else{
+            System.out.println("here2");
+            recent_list = recent(gameEntityRepository.findBySummonerid(id));
+            return recent_list;
+    }
+
+}
     //해당게임에서 사용한 아이템 정렬
     public HashMap<String,String> itemName(Game g){
         HashMap<String,String> h = new HashMap<String,String>();
@@ -164,9 +172,22 @@ public class GameService {
     public List<ResposeGame> recent(List<GameEntity> list){
         List<ResposeGame> R_list = new ArrayList<>();
         for (GameEntity g : list){
-            R_list.add(ResposeGame.of(g,playerEntityRepository.findByGameid(g.getId())));
+            R_list.add(ResposeGame.of(g,playerEntityRepository.findByGameid(g.getGameid())));
         }
         return R_list;
     }
+    public void iteratorGame(Iterator<Game> iterator,String name,long id) throws Exception{
+        while (iterator.hasNext()) {
+            Game g = iterator.next();
+            ChampionEntity champ_id = championEntityRepository.findByChampid(g.getChampionId());
+            SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
+            SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
+            HashMap<String, String> itemName = itemName(g);
+            String k = timeChange(g);
+            player(g, name);
+            gameEntityRepository.save(GameEntity.of(g, k, id, champ_id, spell1, spell2, itemName));
+        }
+    }
+
 
 }

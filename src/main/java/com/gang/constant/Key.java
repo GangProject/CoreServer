@@ -7,9 +7,9 @@ import net.rithms.riot.api.RiotStringNotFound;
  * Created by Junwoo on 2017-04-07.
  */
 public enum Key {
-    KEYONE(1,"RGAPI-e8372943-2ac3-4bed-8d2c-86f9c86174fe"),
-    KEYTWO(2,"RGAPI-342e18e7-3f6f-42ca-8eaf-063956bd50ad"),
-    KEYTHREE(3,"RGAPI-3a7ff858-0698-4186-8093-708a986da6dc");
+    KEYONE(0,"RGAPI-e8372943-2ac3-4bed-8d2c-86f9c86174fe"),
+    KEYTWO(1,"RGAPI-342e18e7-3f6f-42ca-8eaf-063956bd50ad"),
+    KEYTHREE(2,"RGAPI-3a7ff858-0698-4186-8093-708a986da6dc");
 
     private int id;
     private String key;

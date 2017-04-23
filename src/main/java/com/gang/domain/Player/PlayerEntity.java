@@ -41,6 +41,7 @@ public class PlayerEntity{
     private String playername;
 
     @ManyToOne
+    @JoinColumn(name="game_id",insertable = false,updatable = false)
     private GameEntity Game;
 
     public static PlayerEntity of(Game g, Player p,String name){
