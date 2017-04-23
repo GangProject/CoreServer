@@ -1,10 +1,12 @@
 package com.gang.domain.Player;
 
+import com.gang.domain.RecentGame.GameEntity;
 import lombok.*;
 import net.rithms.riot.dto.Game.Game;
 import net.rithms.riot.dto.Game.Player;
 
 import javax.persistence.*;
+import java.util.PriorityQueue;
 
 /**
  * Created by seungki on 2017-04-17.
@@ -17,7 +19,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-public class PlayerEntity {
+public class PlayerEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,12 +37,28 @@ public class PlayerEntity {
     @Column(name = "playerId")
     private long playerid;
 
-    public static PlayerEntity of(Game g, Player p){
+    @Column(name="playerName")
+    private String playername;
+
+    @ManyToOne
+    private GameEntity Game;
+
+    public static PlayerEntity of(Game g, Player p,String name){
         return builder()
                 .gameid(g.getGameId())
                 .championid(p.getChampionId())
                 .playerid(p.getSummonerId())
                 .teamid(p.getTeamId())
+                .playername(name)
+                .build();
+    }
+    public static PlayerEntity ofMy(Game g,String name,long id){
+        return builder()
+                .gameid(g.getGameId())
+                .championid(g.getChampionId())
+                .playerid(id)
+                .playername(name)
+                .teamid(g.getTeamId())
                 .build();
     }
 }

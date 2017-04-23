@@ -9,5 +9,5 @@ import java.util.List;
  * Created by seungki on 2017-04-17.
  */
 public interface PlayerEntityRepository extends JpaRepository<PlayerEntity,Integer>{
-    List<PlayerEntity> findByGameidOrderByTeamid(Game g);
+    List<PlayerEntity> findByGameid(long id);
 }

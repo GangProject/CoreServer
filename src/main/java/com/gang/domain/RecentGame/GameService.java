@@ -45,26 +45,28 @@ public class GameService {
     private ItemEntityRepository itemEntityRepository;
     @Autowired
     private PlayerEntityRepository playerEntityRepository;
-    public List<GameEntity> gameList(String name) throws Exception{
+
+    public List<ResposeGame> gameList(String name) throws Exception{
         long id = summonerApiManager.getSummonerByName(Region.KR,name).getId();
         RecentGames game=gameApiManager.getRecentGames(Region.KR,id);
         Iterator<Game> iterator=game.getGames().iterator();
-        List<PlayerEntity> plist=new ArrayList<>();
+        List<ResposeGame> recent_list =new ArrayList<>();
         RawStats itemList = null;
         while(iterator.hasNext()){
             Game g=iterator.next();
-            System.out.print("not here");
             ChampionEntity champ_id=championEntityRepository.findByChampid(g.getChampionId());
             SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
             HashMap<String,String> itemName = itemName(g);
             String k=timeChange(g);
-
-            gameEntityRepository.save(GameEntity.of(g,k,id,champ_id,spell1,spell2,itemName,playerEntityRepository.findByGameidOrderByTeamid(g)));
+            player(g,name);
+            gameEntityRepository.save(GameEntity.of(g,k,id,champ_id,spell1,spell2,itemName));
         }
-        System.out.print("here");
-        return gameEntityRepository.findBySummonerid(id);
+
+        recent_list=recent (gameEntityRepository.findBySummonerid(id));
+        return recent_list;
     }
+    //해당게임에서 사용한 아이템 정렬
     public HashMap<String,String> itemName(Game g){
         HashMap<String,String> h = new HashMap<String,String>();
         if(g.getStats().getItem0()==0){
@@ -125,13 +127,46 @@ public class GameService {
             return t;
         }
     }
-    public List<PlayerEntity> player(Game game){
+    //함께 게임한 사용자들 정리
+    public void player(Game game,String name) throws Exception{
         Iterator<Player> plist = game.getFellowPlayers().iterator();
+        List<PlayerEntity> red = new ArrayList<>();
+        List<PlayerEntity> blue = new ArrayList<>();
         List<PlayerEntity> list = new ArrayList<>();
+        if(game.getTeamId()==100){
+            blue.add(PlayerEntity.ofMy(game,name,summonerApiManager.getSummonerByName(Region.KR,name).getId()));
+        }else{
+            red.add(PlayerEntity.ofMy(game,name,summonerApiManager.getSummonerByName(Region.KR,name).getId()));
+        }
         while(plist.hasNext()){
             Player p = plist.next();
-            list.add(playerEntityRepository.save(PlayerEntity.of(game,p)));
+            String k = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId()).getName();
+            //100blue
+            if(game.getTeamId()==100){
+                if(game.getTeamId()==p.getTeamId()){
+                    blue.add(PlayerEntity.of(game,p,k));
+                }else{
+                    red.add(PlayerEntity.of(game,p,k));
+                }
+            }else{
+                if(game.getTeamId()==p.getTeamId()){
+                    red.add(PlayerEntity.of(game,p,k));
+                }else{
+                    blue.add(PlayerEntity.of(game,p,k));
+                }
+            }
         }
-        return list;
+        list.addAll(blue);
+        list.addAll(red);;
+        playerEntityRepository.save(list);
     }
+
+    public List<ResposeGame> recent(List<GameEntity> list){
+        List<ResposeGame> R_list = new ArrayList<>();
+        for (GameEntity g : list){
+            R_list.add(ResposeGame.of(g,playerEntityRepository.findByGameid(g.getId())));
+        }
+        return R_list;
+    }
+
 }

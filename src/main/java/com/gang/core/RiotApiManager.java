@@ -41,7 +41,7 @@ public class RiotApiManager implements Serializable{
 
     //키를 바꿔주는 메소드
     public void changeKey() throws StringNotFoundException{
-        currentKey = (currentKey+1)%keyLength; //키 인덱스 돌리고
+        currentKey = (currentKey+1)%keyLength+1; //키 인덱스 돌리고
         key = Key.getKeyById(currentKey); //key 구해서
         api.setKey(key.getKey()); //set Key !
     }

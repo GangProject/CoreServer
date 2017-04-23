@@ -3,6 +3,7 @@ package com.gang.api;
 import com.gang.core.StringNotFoundException;
 import com.gang.domain.RecentGame.GameEntity;
 import com.gang.domain.RecentGame.GameService;
+import com.gang.domain.RecentGame.ResposeGame;
 import io.swagger.annotations.Api;
 import net.rithms.riot.api.RiotApiException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class RecentGameController {
     private GameService gameService;
 
     @RequestMapping(value = "/game",method = RequestMethod.GET)
-    public List<GameEntity> game(@RequestParam(value = "name") String name) throws Exception{
+    public List<ResposeGame> game(@RequestParam(value = "name") String name) throws Exception{
         try {
             return gameService.gameList(name);
         }catch (Exception e){

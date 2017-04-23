@@ -88,11 +88,11 @@ public class GameEntity {
     @Column(name = "gameassist")
     private  int assist;
 
-    @Transient
-    List<PlayerEntity> plist = new ArrayList<>();
+    @OneToMany(mappedBy = "Game")
+    private List<PlayerEntity> p;
 
-    public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem,
-                                List<PlayerEntity> p){
+    public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem
+                                ){
         return GameEntity.builder()
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())
@@ -111,7 +111,6 @@ public class GameEntity {
                 .item4(gameItem.get("item4"))
                 .item5(gameItem.get("item5"))
                 .item6(gameItem.get("item6"))
-                .plist(p)
                 .kill(game.getStats().getChampionsKilled())
                 .death(game.getStats().getNumDeaths())
                 .assist(game.getStats().getAssists())
