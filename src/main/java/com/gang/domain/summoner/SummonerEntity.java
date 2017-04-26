@@ -1,5 +1,6 @@
 package com.gang.domain.summoner;
 
+import com.gang.api.common.Dto;
 import lombok.*;
 import net.rithms.riot.dto.Summoner.Summoner;
 
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SummonerEntity {
+public class SummonerEntity implements Dto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SummonerRepository extends JpaRepository<SummonerEntity,Integer> {
-    Summoner findByName(String name);
+    SummonerEntity findByName(String name);
 }

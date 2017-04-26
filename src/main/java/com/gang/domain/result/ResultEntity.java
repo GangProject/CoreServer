@@ -1,5 +1,7 @@
 package com.gang.domain.result;
 
+import com.gang.api.common.Dto;
+import com.gang.domain.summoner.SummonerEntity;
 import lombok.*;
 import net.rithms.riot.dto.League.League;
 import net.rithms.riot.dto.Summoner.Summoner;
@@ -17,7 +19,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResultEntity {
+public class ResultEntity implements Dto{
     /**
      *  연습용 result 임.. 미래에 회의를 통해 다시 구성할 예정..
      */
@@ -51,11 +53,20 @@ public class ResultEntity {
     @Column(name = "leaguePoints")
     private int leaguePoints;
 
+    public static ResultEntity of(SummonerEntity summonerEntity, League league){
+        double wins = league.getEntries().get(0).getWins();
+        double losses = league.getEntries().get(0).getLosses();
+        double winningRate = (wins/(wins+losses))*100;
 
-    public static ResultEntity of(Summoner summoner,League league){
         return ResultEntity.builder()
-                .summonerId(summoner.getId())
-                .name(summoner.getName())
+                .summonerId(summonerEntity.getSummonerId())
+                .name(summonerEntity.getName())
+                .winingRate(winningRate)
+                .tier(league.getTier())
+                .division(league.getEntries().get(0).getDivision())
+                .wins((int)wins)
+                .losses((int)losses)
+                .leaguePoints(league.getEntries().get(0).getLeaguePoints())
                 .build();
     }
 }

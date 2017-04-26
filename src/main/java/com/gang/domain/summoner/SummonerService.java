@@ -7,6 +7,7 @@ import com.gang.core.RiotApiManager;
 import com.gang.core.StringNotFoundException;
 import com.gang.core.manager.LeagueApiManager;
 import com.gang.core.manager.SummonerApiManager;
+import com.gang.domain.result.ResultEntity;
 import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.League.League;
@@ -38,18 +39,20 @@ public class SummonerService {
 
     @Transactional(readOnly = false)
     public ResponseDto infoSummoner(String name) throws StringNotFoundException,InterruptedException{
-        Summoner summoner = summonerRepository.findByName(name);
+        SummonerEntity summonerEntity = summonerRepository.findByName(name);
         List<League> leagues = null;
+        ResultEntity resultEntity = null;
 
-        if(summoner==null){ //최초 소환사 요청이 오면, 저장한다.
-            summoner = summonerApiManager.getSummonerByName(Region.KR, name);
+        if(summonerEntity==null){ //최초 소환사 요청이 오면, 저장한다.
+            Summoner summoner = summonerApiManager.getSummonerByName(Region.KR, name);
             System.out.println(summoner.getName());
             summonerRepository.save(SummonerEntity.of(summoner));
+            summonerEntity = summonerRepository.findByName(name);
         }
 
-        leagues = leagueApiManager.getLeagueEntryBySummoner(Region.KR, String.valueOf(summoner.getId()));
-        analyzeUtil.analyzeExcute(summoner, leagues);
+        leagues = leagueApiManager.getLeagueEntryBySummoner(Region.KR, String.valueOf(summonerEntity.getSummonerId()));
+        resultEntity = analyzeUtil.analyzeExcute(summonerEntity, leagues);
 
-        return ResponseDto.ofSuccess("성공");
+        return ResponseDto.ofSuccess(resultEntity,"성공");
     }
 }

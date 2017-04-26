@@ -1,6 +1,9 @@
 package com.gang.core;
 
 import java.util.List;
+
+import com.gang.domain.result.ResultEntity;
+import com.gang.domain.summoner.SummonerEntity;
 import net.rithms.riot.dto.League.League;
 import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.stereotype.Component;
@@ -13,20 +16,10 @@ import org.springframework.stereotype.Component;
 public class AnalyzeUtil {
     // 여러 것들을 생성할 것임 차차..
 
-    public String analyzeExcute(Summoner summoner, List<League> leagues){
+    public ResultEntity analyzeExcute(SummonerEntity summonerEntity, List<League> leagues){
         League league = leagues.get(0); //솔로랭크만 테스트해보았다.
+        ResultEntity resultEntity = ResultEntity.of(summonerEntity,league);
 
-        System.out.println(league.getTier());
-        System.out.println(league.getEntries());
-        System.out.println(league.getEntries().get(0).getDivision());
-        System.out.println(league.getEntries().get(0).getWins());
-        System.out.println(league.getEntries().get(0).getLosses());
-
-        System.out.println(summoner.getName());
-        System.out.println(summoner.getId());
-
-        return "ㅋㅋ";
+        return resultEntity;
     }
-
-
 }

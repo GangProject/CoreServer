@@ -29,7 +29,7 @@ public class SummonerController {
         try{
             return summonerService.infoSummoner(name);
         }catch(Exception e){
-            return ResponseDto.ofFailure("실패했습니다.");
+            return ResponseDto.ofFailure(null,"실패했습니다.");
         }
     }
 }
