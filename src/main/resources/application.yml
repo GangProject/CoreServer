@@ -10,7 +10,7 @@ spring:
     generate-ddl: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       naming:
         strategy: org.hibernate.cfg.EJB3NamingStrategy
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
