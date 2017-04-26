@@ -47,4 +47,14 @@ public class SummonerEntity implements Dto {
                 .revisionDate(summoner.getRevisionDate())
                 .build();
     }
+
+    public static SummonerEntity test(long summonerId,String name,int profileIconId,long revisionDate,long summonerLevel){
+        return SummonerEntity.builder()
+                .summonerId(summonerId)
+                .name(name)
+                .profileIconId(profileIconId)
+                .summonerLevel(revisionDate)
+                .revisionDate(summonerLevel)
+                .build();
+    }
 }
