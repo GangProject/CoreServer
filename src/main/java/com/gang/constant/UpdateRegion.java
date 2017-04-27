@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 /**
  * Created by Junwoo on 2017-04-27.
  */
-public enum Region {
+public enum UpdateRegion {
     BR("br.api.pvp.net", "br"),
     EUNE("eune.api.pvp.net", "eune"),
     EUW("euw.api.pvp.net", "euw"),
@@ -23,8 +23,8 @@ public enum Region {
     private String endpoint;
     private String region;
 
-    public static Region getRegionByName(String name) {
-        for (Region region : Region.values()) {
+    public static UpdateRegion getRegionByName(String name) {
+        for (UpdateRegion region : UpdateRegion.values()) {
             if (region.getName().equals(name.toLowerCase())) {
                 return region;
             }
@@ -32,11 +32,11 @@ public enum Region {
         throw new NoSuchElementException("Unknown region name: " + name);
     }
 
-    public static Region getRegionByPlatformId(Platform platformId) {
+    public static UpdateRegion getRegionByPlatformId(Platform platformId) {
         return getRegionByName(platformId.getName());
     }
 
-    Region(String endpoint, String region) {
+    UpdateRegion(String endpoint, String region) {
         this.endpoint = endpoint;
         this.region = region;
     }
