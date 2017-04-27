@@ -34,4 +34,26 @@ public class SummonerController {
             return ResponseDto.ofFailure(null,"실패했습니다.");
         }
     }
+
+    @GetMapping("/challengerList")
+    @ApiOperation(value = "챌린저 리그 정보", notes = "챌린저 리그 솔랭 정보 반환")
+    public ResponseDto challengerList(){
+        try{
+            return summonerService.challengerList();
+        }catch(Exception e){
+            return ResponseDto.ofFailure(null,"실패했습니다.");
+        }
+    }
+
+    @GetMapping("/masterList")
+    @ApiOperation(value = "솔랭 정보", notes = "솔랭 정보 반환")
+    public ResponseDto masterList(){
+        try{
+            return summonerService.masterList();
+        }catch(Exception e){
+            return ResponseDto.ofFailure(null,"실패했습니다.");
+        }
+    }
+
+
 }

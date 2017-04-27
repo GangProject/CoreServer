@@ -30,7 +30,7 @@ public class SummonerEntityTest {
     @Test
     public void insertAndSelect() throws Exception{
         SummonerEntity beforeEntity = summonerRepository.save(summonerEntity);
-        SummonerEntity afterEntity = summonerRepository.findOne(1);
+        SummonerEntity afterEntity = summonerRepository.findBySummonerId(summonerEntity.getSummonerId());
         assertThat(beforeEntity.getName(),is(afterEntity.getName()));
     }
 }

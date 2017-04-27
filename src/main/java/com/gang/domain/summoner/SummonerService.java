@@ -51,6 +51,26 @@ public class SummonerService {
         return ResponseDto.ofSuccess(resultEntity,"성공");
     }
 
+    public ResponseDto challengerList() throws StringNotFoundException,InterruptedException{
+        LeagueDto leagueDto = null;
+        League league;
+
+        league = leagueApiManager.getChallengerLeague(Region.KR);
+        leagueDto = LeagueDto.of(league);
+
+        return ResponseDto.ofSuccess(leagueDto,"성공");
+    }
+
+    public ResponseDto masterList() throws StringNotFoundException,InterruptedException{
+        LeagueDto leagueDto = null;
+        League league;
+
+        league = leagueApiManager.getMasterLeague(Region.KR);
+        leagueDto = LeagueDto.of(league);
+
+        return ResponseDto.ofSuccess(leagueDto,"성공");
+    }
+
     public SummonerEntity firstAccess(SummonerEntity summonerEntity,String name) throws StringNotFoundException,InterruptedException{
         if(summonerEntity==null){ //최초 소환사 요청이 오면, 저장한다.
             Summoner summoner = summonerApiManager.getSummonerByName(Region.KR, name);
