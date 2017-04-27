@@ -5,6 +5,8 @@ import com.gang.domain.Player.PlayerEntity;
 import com.gang.domain.Spell.SpellEntity;
 import lombok.*;
 import net.rithms.riot.dto.Game.Game;
+import net.rithms.riot.dto.Match.Participant;
+import net.rithms.riot.dto.Match.ParticipantIdentity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -91,6 +93,15 @@ public class GameEntity {
     @OneToMany(mappedBy = "Game")
     private List<PlayerEntity> p;
 
+    @Transient
+    private long damage;
+
+    @Transient
+    private long ward;
+
+    @Transient
+    private long gold;
+
     public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem
                                 ){
         return GameEntity.builder()
@@ -116,6 +127,7 @@ public class GameEntity {
                 .assist(game.getStats().getAssists())
                 .build();
     }
+
 
 
 }

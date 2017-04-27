@@ -14,6 +14,10 @@ import net.rithms.riot.dto.Game.Game;
 import net.rithms.riot.dto.Game.Player;
 import net.rithms.riot.dto.Game.RawStats;
 import net.rithms.riot.dto.Game.RecentGames;
+import net.rithms.riot.dto.Match.MatchDetail;
+import net.rithms.riot.dto.Match.Participant;
+import net.rithms.riot.dto.Match.ParticipantIdentity;
+import net.rithms.riot.dto.Match.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -188,6 +192,81 @@ public class GameService {
             gameEntityRepository.save(GameEntity.of(g, k, id, champ_id, spell1, spell2, itemName));
         }
     }
+
+    public GameInfo gameInfo(String id) throws Exception{
+        int gid = Integer.parseInt(id);
+        MatchDetail matchDetail = gameApiManager.getRecentGamesInfo(Region.KR,gid);
+        Iterator<Participant> list = matchDetail.getParticipants().iterator();
+        Iterator<ParticipantIdentity> p_list = matchDetail.getParticipantIdentities().iterator();
+        List<GamePlayer> gameinfo = new ArrayList<>();
+        int winner=0;
+        String winnerName;
+        Iterator<Team> team=matchDetail.getTeams().iterator();
+        while (team.hasNext()){
+            Team t = team.next();
+            if(t.isWinner()==true){
+                winner=t.getTeamId();
+            }
+        }
+        if(winner==100){
+            winnerName="블루팀";
+        }else{
+            winnerName="레드팀";
+        }
+        while(list.hasNext()) {
+            Participant part = list.next();
+            ParticipantIdentity partici = p_list.next();
+            GamePlayer game=GamePlayer.ofParty(part,partici,championEntityRepository.findByChampid(part.getChampionId()).getName(),itemPlayer(part),spell(part));
+            gameinfo.add(game);
+        }
+        return GameInfo.of(gameinfo,winnerName);
+    }
+   public HashMap<String,String> itemPlayer(Participant p){
+       HashMap<String,String> h = new HashMap<String,String>();
+       if(p.getStats().getItem0()==0){
+           h.put("Item0",null);
+       }else{
+           h.put("item0",itemEntityRepository.findByItemid((int)p.getStats().getItem0()).getName());
+       }
+       if(p.getStats().getItem1()==0){
+           h.put("Item1",null);
+       }else{
+           h.put("item1",itemEntityRepository.findByItemid((int)p.getStats().getItem1()).getName());
+       }
+       if(p.getStats().getItem2()==0){
+           h.put("Item2",null);
+       }else{
+           h.put("item2",itemEntityRepository.findByItemid((int)p.getStats().getItem2()).getName());
+       }
+       if(p.getStats().getItem3()==0){
+           h.put("Item3",null);
+       }else{
+           h.put("item3",itemEntityRepository.findByItemid((int)p.getStats().getItem3()).getName());
+       }
+       if(p.getStats().getItem4()==0){
+           h.put("Item4",null);
+       }else{
+           h.put("item4",itemEntityRepository.findByItemid((int)p.getStats().getItem4()).getName());
+       }
+       if(p.getStats().getItem5()==0){
+           h.put("Item5",null);
+       }else{
+           h.put("item5",itemEntityRepository.findByItemid((int)p.getStats().getItem5()).getName());
+       }
+       if(p.getStats().getItem6()==0){
+           h.put("Item6",null);
+       }else{
+           h.put("item6",itemEntityRepository.findByItemid((int)p.getStats().getItem6()).getName());
+       }
+       return h;
+   }
+    public HashMap<String,String> spell(Participant p){
+       HashMap<String,String> spell = new HashMap<>();
+       spell.put("spell1",spellRepository.findBySpellid(p.getSpell1Id()).getName());
+       spell.put("spell2",spellRepository.findBySpellid(p.getSpell2Id()).getName());
+       return spell;
+    }
+
 
 
 }

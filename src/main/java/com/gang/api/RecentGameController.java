@@ -2,6 +2,7 @@ package com.gang.api;
 
 import com.gang.core.StringNotFoundException;
 import com.gang.domain.RecentGame.GameEntity;
+import com.gang.domain.RecentGame.GameInfo;
 import com.gang.domain.RecentGame.GameService;
 import com.gang.domain.RecentGame.ResposeGame;
 import io.swagger.annotations.Api;
@@ -39,6 +40,16 @@ public class RecentGameController {
     public List<ResposeGame> game(@RequestParam(value = "name") String name,int a) throws Exception{
         try {
             return gameService.gameList(name);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @ApiOperation(value = "게임자세하게 보기",notes = "게임정보")
+    @RequestMapping(value = "/game/info",method = RequestMethod.GET)
+    public GameInfo gameInfo(@RequestParam(value = "gid") String id) throws Exception{
+        try {
+            return gameService.gameInfo(id);
         }catch (Exception e){
             throw e;
         }
