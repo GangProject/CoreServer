@@ -3,6 +3,7 @@ package com.gang.api;
 import com.gang.api.common.ResponseDto;
 import com.gang.domain.summoner.SummonerService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;
@@ -25,6 +26,7 @@ public class SummonerController {
     SummonerService summonerService;
 
     @GetMapping("/info")
+    @ApiOperation(value = "솔랭 정보", notes = "솔랭 정보 반환")
     public ResponseDto byName(@RequestParam(value = "name")String name){
         try{
             return summonerService.infoSummoner(name);

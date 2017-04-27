@@ -43,16 +43,21 @@ public class SummonerService {
         List<League> leagues = null;
         ResultEntity resultEntity = null;
 
+        summonerEntity = firstAccess(summonerEntity,name);
+
+        leagues = leagueApiManager.getLeagueEntryBySummoner(Region.KR, String.valueOf(summonerEntity.getSummonerId()));
+        resultEntity = analyzeUtil.analyzeExcute(summonerEntity, leagues);
+
+        return ResponseDto.ofSuccess(resultEntity,"성공");
+    }
+
+    public SummonerEntity firstAccess(SummonerEntity summonerEntity,String name) throws StringNotFoundException,InterruptedException{
         if(summonerEntity==null){ //최초 소환사 요청이 오면, 저장한다.
             Summoner summoner = summonerApiManager.getSummonerByName(Region.KR, name);
             System.out.println(summoner.getName());
             summonerRepository.save(SummonerEntity.of(summoner));
             summonerEntity = summonerRepository.findByName(name);
         }
-
-        leagues = leagueApiManager.getLeagueEntryBySummoner(Region.KR, String.valueOf(summonerEntity.getSummonerId()));
-        resultEntity = analyzeUtil.analyzeExcute(summonerEntity, leagues);
-
-        return ResponseDto.ofSuccess(resultEntity,"성공");
+        return summonerEntity;
     }
 }
