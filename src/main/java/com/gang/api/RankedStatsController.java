@@ -1,8 +1,14 @@
 package com.gang.api;
 
+import com.gang.api.common.ResponseDto;
+import com.gang.domain.AggregateStats.AggregateStatsResponseDto;
+import com.gang.domain.RankedStats.RankedStatsService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,5 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "rankedStats", description = "랭크 챔피언 API", basePath= "/api/rankedStats")
 @RequestMapping("/api/rankedStats")
 public class RankedStatsController {
+
+    @Autowired
+    RankedStatsService rankedStatsService;
+
+    @GetMapping("/info")
+    @ApiOperation(value = "랭크 챔피언 정보", notes = "랭크 챔피언 정보 반환")
+    public AggregateStatsResponseDto byName(@RequestParam(value = "name")String name){
+        try{
+            return AggregateStatsResponseDto.of(rankedStatsService.infoRankedStats(name));
+        }catch(Exception e){
+            return AggregateStatsResponseDto.Empty();
+        }
+    }
 
 }

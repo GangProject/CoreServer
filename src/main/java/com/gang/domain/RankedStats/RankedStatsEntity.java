@@ -1,7 +1,9 @@
 package com.gang.domain.RankedStats;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import com.gang.api.common.Dto;
 import com.gang.domain.ChampionStats.ChampionStatsEntity;
@@ -38,8 +40,9 @@ public class RankedStatsEntity implements Dto {
     private List<ChampionStatsEntity> champions;
 
     public static RankedStatsEntity of(RankedStats rankedStats){
+
         List<ChampionStatsEntity> championList = new LinkedList<ChampionStatsEntity>();
-        for(ChampionStats c : rankedStats.getChampions()){
+        for(ChampionStats c : rankedStats.getChampions()) {
             championList.add(ChampionStatsEntity.of(c));
         }
 

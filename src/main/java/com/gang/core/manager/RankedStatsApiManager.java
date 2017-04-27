@@ -28,7 +28,7 @@ public class RankedStatsApiManager extends RiotApiManager{
         while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
             System.out.println(key.toString());
             try {
-                rankedStats = api.getRankedStats(Region.KR, Season.CURRENT,summonerId);
+                rankedStats = api.getRankedStats(Region.KR, summonerId);
                 success = true;
             } catch (RateLimitException e) { //key 요청 횟수 초과시
                 System.out.println("key 바꿈");
