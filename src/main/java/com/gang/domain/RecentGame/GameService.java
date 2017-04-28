@@ -193,70 +193,95 @@ public class GameService {
         }
     }
 
-    public GameInfo gameInfo(String id) throws Exception{
-        int gid = Integer.parseInt(id);
-        MatchDetail matchDetail = gameApiManager.getRecentGamesInfo(Region.KR,gid);
+    public Game_info gameInfo(long id) throws Exception{
+
+        MatchDetail matchDetail = gameApiManager.getRecentGamesInfo(Region.KR,id);
         Iterator<Participant> list = matchDetail.getParticipants().iterator();
         Iterator<ParticipantIdentity> p_list = matchDetail.getParticipantIdentities().iterator();
-        List<GamePlayer> gameinfo = new ArrayList<>();
-        int winner=0;
-        String winnerName;
-        Iterator<Team> team=matchDetail.getTeams().iterator();
-        while (team.hasNext()){
-            Team t = team.next();
-            if(t.isWinner()==true){
-                winner=t.getTeamId();
-            }
-        }
-        if(winner==100){
-            winnerName="블루팀";
-        }else{
-            winnerName="레드팀";
-        }
+        List<GamePlayer> red = new ArrayList<>();
+        List<GamePlayer> blue = new ArrayList<>();
+
+
         while(list.hasNext()) {
             Participant part = list.next();
             ParticipantIdentity partici = p_list.next();
-            GamePlayer game=GamePlayer.ofParty(part,partici,championEntityRepository.findByChampid(part.getChampionId()).getName(),itemPlayer(part),spell(part));
-            gameinfo.add(game);
+            GamePlayer game=GamePlayer.ofParty(part,partici,championEntityRepository.findByChampid(part.getChampionId()).getName(),spell(part),itemPlayer(part));
+            if(game.getTeamId()==100){
+                blue.add(game);
+            }else{
+                red.add(game);
+            }
         }
-        return GameInfo.of(gameinfo,winnerName);
+
+        Iterator<Team> team=matchDetail.getTeams().iterator();
+        int teamid=0;
+        while (team.hasNext()){
+            Team t = team.next();
+            if(t.isWinner()==true){
+                teamid=t.getTeamId();
+            }
+        }
+        List<GameInfo> gameInfos = new ArrayList<>();
+        Iterator<Team> team1=matchDetail.getTeams().iterator();
+        if(teamid==100){
+            while (team1.hasNext()){
+                Team t = team1.next();
+                if (t.getTeamId()==100){
+                    gameInfos.add(GameInfo.of(blue,true,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
+                }else{
+                    gameInfos.add(GameInfo.of(red,false,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
+                }
+            }
+        }else{
+            while (team1.hasNext()){
+                Team t = team1.next();
+                if (t.getTeamId()==200){
+                    gameInfos.add(GameInfo.of(blue,false,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
+                }else{
+                    gameInfos.add(GameInfo.of(red,true,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
+                }
+            }
+        }
+
+        return Game_info.of(gameInfos);
+
     }
    public HashMap<String,String> itemPlayer(Participant p){
        HashMap<String,String> h = new HashMap<String,String>();
        if(p.getStats().getItem0()==0){
            h.put("Item0",null);
        }else{
-           h.put("item0",itemEntityRepository.findByItemid((int)p.getStats().getItem0()).getName());
+           h.put("Item0",itemEntityRepository.findByItemid((int)p.getStats().getItem0()).getName());
        }
        if(p.getStats().getItem1()==0){
            h.put("Item1",null);
        }else{
-           h.put("item1",itemEntityRepository.findByItemid((int)p.getStats().getItem1()).getName());
+           h.put("Item1",itemEntityRepository.findByItemid((int)p.getStats().getItem1()).getName());
        }
        if(p.getStats().getItem2()==0){
            h.put("Item2",null);
        }else{
-           h.put("item2",itemEntityRepository.findByItemid((int)p.getStats().getItem2()).getName());
+           h.put("Item2",itemEntityRepository.findByItemid((int)p.getStats().getItem2()).getName());
        }
        if(p.getStats().getItem3()==0){
            h.put("Item3",null);
        }else{
-           h.put("item3",itemEntityRepository.findByItemid((int)p.getStats().getItem3()).getName());
+           h.put("Item3",itemEntityRepository.findByItemid((int)p.getStats().getItem3()).getName());
        }
        if(p.getStats().getItem4()==0){
            h.put("Item4",null);
        }else{
-           h.put("item4",itemEntityRepository.findByItemid((int)p.getStats().getItem4()).getName());
+           h.put("Item4",itemEntityRepository.findByItemid((int)p.getStats().getItem4()).getName());
        }
        if(p.getStats().getItem5()==0){
            h.put("Item5",null);
        }else{
-           h.put("item5",itemEntityRepository.findByItemid((int)p.getStats().getItem5()).getName());
+           h.put("Item5",itemEntityRepository.findByItemid((int)p.getStats().getItem5()).getName());
        }
        if(p.getStats().getItem6()==0){
            h.put("Item6",null);
        }else{
-           h.put("item6",itemEntityRepository.findByItemid((int)p.getStats().getItem6()).getName());
+           h.put("Item6",itemEntityRepository.findByItemid((int)p.getStats().getItem6()).getName());
        }
        return h;
    }

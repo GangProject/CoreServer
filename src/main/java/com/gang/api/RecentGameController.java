@@ -1,10 +1,7 @@
 package com.gang.api;
 
 import com.gang.core.StringNotFoundException;
-import com.gang.domain.RecentGame.GameEntity;
-import com.gang.domain.RecentGame.GameInfo;
-import com.gang.domain.RecentGame.GameService;
-import com.gang.domain.RecentGame.ResposeGame;
+import com.gang.domain.RecentGame.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.rithms.riot.api.RiotApiException;
@@ -47,7 +44,7 @@ public class RecentGameController {
 
     @ApiOperation(value = "게임자세하게 보기",notes = "게임정보")
     @RequestMapping(value = "/game/info",method = RequestMethod.GET)
-    public GameInfo gameInfo(@RequestParam(value = "gid") String id) throws Exception{
+    public Game_info gameInfo(@RequestParam(value = "gid") long id) throws Exception{
         try {
             return gameService.gameInfo(id);
         }catch (Exception e){

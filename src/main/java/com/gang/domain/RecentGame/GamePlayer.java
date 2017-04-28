@@ -21,6 +21,7 @@ import java.util.HashMap;
 public class GamePlayer {
     private long summonerid;
     private long gameid;
+    private String name;
     private String createDate;
     private String gameMode;
     private String champion;
@@ -43,21 +44,23 @@ public class GamePlayer {
     private long ward;
     private long gold;
 
+
     public static GamePlayer ofParty(Participant p, ParticipantIdentity p2, String name, HashMap<String,String> spell, HashMap<String,String> item
     ){
         return GamePlayer.builder()
                 .teamId(p.getTeamId())
                 .summonerid(p2.getPlayer().getSummonerId())
                 .champion(name)
+                .name(p2.getPlayer().getSummonerName())
                 .spell1(spell.get("spell1"))
                 .spell2(spell.get("spell2"))
-                .item0(item.get("item0"))
-                .item1(item.get("item1"))
-                .item2(item.get("item2"))
-                .item3(item.get("item3"))
-                .item4(item.get("item4"))
-                .item5(item.get("item5"))
-                .item6(item.get("item6"))
+                .item0(item.get("Item0"))
+                .item1(item.get("Item1"))
+                .item2(item.get("Item2"))
+                .item3(item.get("Item3"))
+                .item4(item.get("Item4"))
+                .item5(item.get("Item5"))
+                .item6(item.get("Item6"))
                 .kill((int)p.getStats().getKills())
                 .death((int)p.getStats().getDeaths())
                 .assist((int)p.getStats().getAssists())

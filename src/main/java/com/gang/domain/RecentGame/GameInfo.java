@@ -13,13 +13,22 @@ import java.util.List;
 @Setter
 @Builder
 public class GameInfo {
-    private String winner;
+
+    private boolean win;
+    private long dragonkill;
+    private long towerkill;
+    private long baronkill;
     private List<GamePlayer> list;
 
-    public static GameInfo of(List<GamePlayer> list,String name){
+
+
+    public static GameInfo of(List<GamePlayer> list,boolean win,long dragonkill,long towerkill,long baronkill){
         return GameInfo.builder()
                 .list(list)
-                .winner(name)
+                .win(win)
+                .dragonkill(dragonkill)
+                .towerkill(towerkill)
+                .baronkill(baronkill)
                 .build();
     }
 }
