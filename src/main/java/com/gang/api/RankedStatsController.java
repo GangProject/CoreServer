@@ -32,4 +32,14 @@ public class RankedStatsController {
         }
     }
 
+    @GetMapping("/delete")
+    @ApiOperation(value = "챔피언 랭크 정보 삭제", notes = "챔피언 랭크 정보 삭제")
+    public ResponseDto delete(@RequestParam(value = "name")String name){
+        try{
+            rankedStatsService.rankedStatsRemove(name);
+            return ResponseDto.ofSuccess(null,"성공");
+        }catch(Exception e){
+            return ResponseDto.ofFailure(null,"실패");
+        }
+    }
 }

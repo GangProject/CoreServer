@@ -69,4 +69,20 @@ public class ResultEntity implements Dto{
                 .leaguePoints(league.getEntries().get(0).getLeaguePoints())
                 .build();
     }
+
+    public static ResultEntity test(long summonerId,String name,String tier,String division,int wins,int losses,int leaguePoints){
+        double winningRate = (wins/(wins+losses))*100;
+
+        return ResultEntity.builder()
+                .summonerId(summonerId)
+                .name(name)
+                .winingRate(winningRate)
+                .tier(tier)
+                .division(division)
+                .wins(wins)
+                .losses(losses)
+                .leaguePoints(leaguePoints)
+                .build();
+    }
+
 }

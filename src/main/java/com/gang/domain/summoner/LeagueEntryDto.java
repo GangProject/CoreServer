@@ -30,10 +30,11 @@ public class LeagueEntryDto implements Comparable<LeagueEntryDto>{
                 .winningRate(winningRate)
                 .playerId(leagueEntry.getPlayerOrTeamId())
                 .playerName(leagueEntry.getPlayerOrTeamName())
+                .leaguePoints(leagueEntry.getLeaguePoints())
                 .build();
     }
 
     public int compareTo(LeagueEntryDto leagueEntryDto){
-        return leaguePoints<leagueEntryDto.leaguePoints?-1:1;
+        return leaguePoints<leagueEntryDto.leaguePoints?1:-1;
     }
 }

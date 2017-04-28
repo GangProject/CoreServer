@@ -51,25 +51,28 @@ public class RankedStatsService {
     private SummonerRepository summonerRepository;
 
     @Autowired
+    private RankedStatsRepository rankedStatsRepository;
+
+    @Autowired
     private ChampionEntityRepository championEntityRepository;
 
-    public List<AggregateStatsDto> infoRankedStats(String name) throws RiotApiException, StringNotFoundException,InterruptedException{
+    public List<AggregateStatsDto> infoRankedStats(String name) throws RiotApiException, StringNotFoundException,InterruptedException {
         List<AggregateStatsDto> stats = new LinkedList<AggregateStatsDto>();
         SummonerEntity summonerEntity = summonerRepository.findByName(name);
         RankedStatsEntity rankedStatsEntity = null;
 
-        summonerEntity = summonerService.firstAccess(summonerEntity,name);
-        rankedStatsEntity = rankedStatsApiManager.getRankedStatsById(Region.KR,summonerEntity.getSummonerId());
+        summonerEntity = summonerService.firstAccess(summonerEntity, name);
+        rankedStatsEntity = rankedStatsApiManager.getRankedStatsById(Region.KR, summonerEntity.getSummonerId());
 
         /*
           아직 db 에 챔피언을 저장해놓지 않았으므로 .. 챔피언 이름은 다시 수정할 것.
          */
-        for(ChampionStatsEntity c : rankedStatsEntity.getChampions()){
+        for (ChampionStatsEntity c : rankedStatsEntity.getChampions()) {
             int champId = c.getChampionId();
 
             try {
                 stats.add(AggregateStatsDto.of(c.getStats(), champId, "피즈"));
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
             }
         }
@@ -78,4 +81,11 @@ public class RankedStatsService {
 
         return stats;
     }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = false)
+    public void rankedStatsRemove(String name){
+        SummonerEntity summoner = summonerRepository.findByName(name);
+        rankedStatsRepository.delete(rankedStatsRepository.findBySummonerId(summoner.getSummonerId()));
+    }
+
 }

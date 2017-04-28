@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ChampionEntityRepository extends JpaRepository<ChampionEntity,Integer> {
     ChampionEntity findByChampid(int id);
+    ChampionEntity findByName(String name);
 }

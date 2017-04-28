@@ -38,17 +38,22 @@ public class SummonerService {
     private SummonerRepository summonerRepository;
 
     @Transactional(readOnly = false)
-    public ResponseDto infoSummoner(String name) throws StringNotFoundException,InterruptedException{
+    public List<ResultEntity> infoSummoner(String name) throws StringNotFoundException,InterruptedException{
         SummonerEntity summonerEntity = summonerRepository.findByName(name);
         List<League> leagues = null;
-        ResultEntity resultEntity = null;
+        List<ResultEntity> resultEntityDtos = null;
 
         summonerEntity = firstAccess(summonerEntity,name);
 
         leagues = leagueApiManager.getLeagueEntryBySummoner(Region.KR, String.valueOf(summonerEntity.getSummonerId()));
-        resultEntity = analyzeUtil.analyzeExcute(summonerEntity, leagues);
+        resultEntityDtos = analyzeUtil.analyzeExcute(summonerEntity, leagues);
 
-        return ResponseDto.ofSuccess(resultEntity,"성공");
+        return resultEntityDtos;
+    }
+
+    @Transactional(readOnly = false)
+    public void summonerRemove(String name){
+        summonerRepository.delete(summonerRepository.findByName(name));
     }
 
     public ResponseDto challengerList() throws StringNotFoundException,InterruptedException{
