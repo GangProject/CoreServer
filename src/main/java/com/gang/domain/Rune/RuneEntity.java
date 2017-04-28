@@ -23,12 +23,12 @@ public class RuneEntity {
     private int id;
 
     @Column(name = "runid")
-    private long runid;
+    private int runid;
 
     @Column(name = "runname")
     private String name;
 
-    public static RuneEntity of(long id,String name){
+    public static RuneEntity of(int id,String name){
         return builder()
                 .name(name)
                 .runid(id)
