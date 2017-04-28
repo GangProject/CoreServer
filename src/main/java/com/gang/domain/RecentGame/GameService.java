@@ -1,6 +1,7 @@
 package com.gang.domain.RecentGame;
 
 import com.gang.core.manager.GameApiManager;
+import com.gang.core.manager.LeagueApiManager;
 import com.gang.core.manager.SummonerApiManager;
 import com.gang.domain.Champion.ChampionEntity;
 import com.gang.domain.Champion.ChampionEntityRepository;
@@ -9,11 +10,13 @@ import com.gang.domain.Player.PlayerEntity;
 import com.gang.domain.Player.PlayerEntityRepository;
 import com.gang.domain.Spell.SpellEntity;
 import com.gang.domain.Spell.SpellRepository;
+import com.gang.domain.summoner.LeagueDto;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Game.Game;
 import net.rithms.riot.dto.Game.Player;
 import net.rithms.riot.dto.Game.RawStats;
 import net.rithms.riot.dto.Game.RecentGames;
+import net.rithms.riot.dto.League.League;
 import net.rithms.riot.dto.Match.MatchDetail;
 import net.rithms.riot.dto.Match.Participant;
 import net.rithms.riot.dto.Match.ParticipantIdentity;
@@ -41,14 +44,20 @@ public class GameService {
 
     @Autowired
     private GameEntityRepository gameEntityRepository;
+
     @Autowired
     private ChampionEntityRepository championEntityRepository;
+
     @Autowired
     private SpellRepository spellRepository;
+
     @Autowired
     private ItemEntityRepository itemEntityRepository;
+
     @Autowired
     private PlayerEntityRepository playerEntityRepository;
+    @Autowired
+    private LeagueApiManager leagueApiManager;
 
     public List<ResposeGame> gameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
@@ -198,6 +207,7 @@ public class GameService {
         MatchDetail matchDetail = gameApiManager.getRecentGamesInfo(Region.KR,id);
         Iterator<Participant> list = matchDetail.getParticipants().iterator();
         Iterator<ParticipantIdentity> p_list = matchDetail.getParticipantIdentities().iterator();
+
         List<GamePlayer> red = new ArrayList<>();
         List<GamePlayer> blue = new ArrayList<>();
 
@@ -205,7 +215,11 @@ public class GameService {
         while(list.hasNext()) {
             Participant part = list.next();
             ParticipantIdentity partici = p_list.next();
-            GamePlayer game=GamePlayer.ofParty(part,partici,championEntityRepository.findByChampid(part.getChampionId()).getName(),spell(part),itemPlayer(part));
+            String summerid=String.valueOf(partici.getPlayer().getSummonerId());
+            List<League> league = leagueApiManager.getLeagueEntryBySummoner(Region.KR,summerid);
+            String tier=league.get(0).getTier()+league.get(0).getEntries().iterator().next().getDivision();
+            GamePlayer game=GamePlayer.ofParty(part,partici,championEntityRepository.findByChampid(part.getChampionId()).getName(),spell(part),itemPlayer(part),tier);
+
             if(game.getTeamId()==100){
                 blue.add(game);
             }else{

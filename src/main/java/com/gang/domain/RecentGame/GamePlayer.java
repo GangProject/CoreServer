@@ -43,10 +43,12 @@ public class GamePlayer {
     private long damage;
     private long ward;
     private long gold;
+    private long cs;
+    private String tier;
 
 
     public static GamePlayer ofParty(Participant p, ParticipantIdentity p2, String name, HashMap<String,String> spell, HashMap<String,String> item
-    ){
+    ,String tier){
         return GamePlayer.builder()
                 .teamId(p.getTeamId())
                 .summonerid(p2.getPlayer().getSummonerId())
@@ -67,6 +69,7 @@ public class GamePlayer {
                 .gold(p.getStats().getGoldEarned())
                 .ward(p.getStats().getWardsPlaced())
                 .damage(p.getStats().getTotalDamageDealtToChampions())
+                .tier(tier)
                 .build();
     }
 
