@@ -41,24 +41,31 @@ public class RuneService {
 
     }
     //다시할껏
-    public void Rune_summer(String id ) throws Exception{
+    public HashMap<String, HashMap> Rune_summer(String id ) throws Exception{
         Map<String,RunePages> list =runeApiManager.getRune(id);
         Iterator<RunePage> iter = list.get(id).getPages().iterator();
         HashMap<String,HashMap> rune= new HashMap<>();
-        HashMap<String,Integer> slott= new HashMap<>();
-        while(iter.hasNext()){
-            RunePage r  = iter.next();
+        HashMap<String,Integer> slott;
+        HashMap<String,Integer> temp= new HashMap<>();
+        while(iter.hasNext()) {
+            RunePage r = iter.next();
             Iterator<RuneSlot> slot = r.getSlots().iterator();
-            while (slot.hasNext()){
+            slott=new HashMap<>();
+            while (slot.hasNext()) {
                 RuneSlot s = slot.next();
-                slott.put(runeEntityRepository.findByRunid(s.getRuneId()).getName(),0);
-                slott.put(runeEntityRepository.findByRunid(s.getRuneId()).getName(),slott.get(runeEntityRepository.findByRunid(s.getRuneId()).getName())+1);
+                if(slott.get(runeEntityRepository.findByRunid(s.getRuneId()).getName())==null){
+                    slott.put(runeEntityRepository.findByRunid(s.getRuneId()).getName(), 1);
+                }else{
+                    slott.put(runeEntityRepository.findByRunid(s.getRuneId()).getName(), slott.get(runeEntityRepository.findByRunid(s.getRuneId()).getName()) + 1);
+                }
+
             }
-            rune.put(r.getName(),slott);
+            //clone은 복재
+            temp=(HashMap)slott.clone();
+            rune.put(r.getName(), temp);
+            slott.clear();
         }
-        System.out.println(rune.toString()+"HERE");
-
-
+        return rune;
 
     }
 
