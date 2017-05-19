@@ -24,7 +24,7 @@ public class SummonerEntity implements Dto {
     private int id;
 
     @Column(name = "summonerId")
-    private long summonerId;
+    private int summonerId;
 
     @Column(name = "name")
     private String name;
@@ -40,7 +40,7 @@ public class SummonerEntity implements Dto {
 
     public static SummonerEntity of(Summoner summoner){
         return SummonerEntity.builder()
-                .summonerId(summoner.getId())
+                .summonerId((int)summoner.getId())
                 .name(summoner.getName())
                 .profileIconId(summoner.getProfileIconId())
                 .summonerLevel(summoner.getSummonerLevel())
@@ -48,7 +48,7 @@ public class SummonerEntity implements Dto {
                 .build();
     }
 
-    public static SummonerEntity test(long summonerId,String name,int profileIconId,long revisionDate,long summonerLevel){
+    public static SummonerEntity test(int summonerId,String name,int profileIconId,long revisionDate,long summonerLevel){
         return SummonerEntity.builder()
                 .summonerId(summonerId)
                 .name(name)
