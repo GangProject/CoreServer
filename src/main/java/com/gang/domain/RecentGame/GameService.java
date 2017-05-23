@@ -5,6 +5,7 @@ import com.gang.core.manager.LeagueApiManager;
 import com.gang.core.manager.SummonerApiManager;
 import com.gang.domain.Champion.ChampionEntity;
 import com.gang.domain.Champion.ChampionEntityRepository;
+import com.gang.domain.GameLine.*;
 import com.gang.domain.ITEM.ItemEntityRepository;
 import com.gang.domain.Player.PlayerEntity;
 import com.gang.domain.Player.PlayerEntityRepository;
@@ -56,8 +57,24 @@ public class GameService {
 
     @Autowired
     private PlayerEntityRepository playerEntityRepository;
+
     @Autowired
     private LeagueApiManager leagueApiManager;
+
+    @Autowired
+    private MIDRepository midRepository;
+
+    @Autowired
+    private ADRepository adRepository;
+
+    @Autowired
+    private APRepository apRepository;
+
+    @Autowired
+    private TOPRepository topRepository;
+
+    @Autowired
+    private SUPRepository supRepository;
 
     public List<ResposeGame> gameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
@@ -66,6 +83,7 @@ public class GameService {
         List<ResposeGame> recent_list = new ArrayList<>();
         iteratorGame(iterator,name,id);
         recent_list = recent(gameEntityRepository.findBySummonerid(id));
+
         return recent_list;
     }
 
@@ -192,6 +210,7 @@ public class GameService {
     public void iteratorGame(Iterator<Game> iterator,String name,long id) throws Exception{
         while (iterator.hasNext()) {
             Game g = iterator.next();
+            game_line(g,id);
             ChampionEntity champ_id = championEntityRepository.findByChampid(g.getChampionId());
             SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
@@ -304,6 +323,18 @@ public class GameService {
        spell.put("spell1",spellRepository.findBySpellid(p.getSpell1Id()).getName());
        spell.put("spell2",spellRepository.findBySpellid(p.getSpell2Id()).getName());
        return spell;
+    }
+    public void game_line(Game game,long id){
+        //4는 서폿
+        //3 정글
+        //2 미드
+        //1탑
+        MID mid = midRepository.findByPlayerid(id);
+        TOP top = topRepository.findByPlayerid(id);
+        SUP sup = supRepository.findByPlayerid(id);
+        AD ad = adRepository.findByPlayerid(id);
+        AP ad = apRepository.findByPlayerid(id);
+        
     }
 
 
