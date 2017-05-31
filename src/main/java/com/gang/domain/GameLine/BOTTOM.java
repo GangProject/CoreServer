@@ -5,22 +5,21 @@ import lombok.*;
 import javax.persistence.*;
 
 /**
- * Created by seungki on 2017-05-23.
+ * Created by seungki on 2017-05-31.
  */
 @Getter
 @Setter
 @Entity
 @Data
-@Table( name = "AD")
+@Table( name = "BOTTOM")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AD {
-
+public class BOTTOM {
     @Id
-    @Column(name= "ad_id")
+    @Column(name= "bottom_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int ad_id;
+    private int bottom_id;
 
     @Column(name="total_Game")
     private int totalGame;
@@ -33,5 +32,4 @@ public class AD {
 
     @Column(name="playerId")
     private long player_id;
-
 }

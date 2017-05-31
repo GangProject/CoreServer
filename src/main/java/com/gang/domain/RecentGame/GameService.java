@@ -11,11 +11,9 @@ import com.gang.domain.Player.PlayerEntity;
 import com.gang.domain.Player.PlayerEntityRepository;
 import com.gang.domain.Spell.SpellEntity;
 import com.gang.domain.Spell.SpellRepository;
-import com.gang.domain.summoner.LeagueDto;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Game.Game;
 import net.rithms.riot.dto.Game.Player;
-import net.rithms.riot.dto.Game.RawStats;
 import net.rithms.riot.dto.Game.RecentGames;
 import net.rithms.riot.dto.League.League;
 import net.rithms.riot.dto.Match.MatchDetail;
@@ -26,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -65,16 +62,14 @@ public class GameService {
     private MIDRepository midRepository;
 
     @Autowired
-    private ADRepository adRepository;
+    private BOTTOMRepository bottomRepository;
 
     @Autowired
-    private APRepository apRepository;
+    private JUNGGLERepository apRepository;
 
     @Autowired
     private TOPRepository topRepository;
 
-    @Autowired
-    private SUPRepository supRepository;
 
     public List<ResposeGame> gameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
@@ -210,7 +205,7 @@ public class GameService {
     public void iteratorGame(Iterator<Game> iterator,String name,long id) throws Exception{
         while (iterator.hasNext()) {
             Game g = iterator.next();
-            game_line(g,id);
+            game_line(g,id,g.getStats().isWin());
             ChampionEntity champ_id = championEntityRepository.findByChampid(g.getChampionId());
             SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
@@ -324,19 +319,67 @@ public class GameService {
        spell.put("spell2",spellRepository.findBySpellid(p.getSpell2Id()).getName());
        return spell;
     }
-    public void game_line(Game game,long id){
+    public void game_line(Game game,long id,boolean win) throws  Exception{
         //4는 서폿
         //3 정글
         //2 미드
         //1탑
-        MID mid = midRepository.findByPlayerid(id);
-        TOP top = topRepository.findByPlayerid(id);
-        SUP sup = supRepository.findByPlayerid(id);
-        AD ad = adRepository.findByPlayerid(id);
-        AP ad = apRepository.findByPlayerid(id);
-        
+
+       Iterator<ParticipantIdentity> list = gameApiManager.getRecentGamesInfo(Region.KR,game.getGameId()).getParticipantIdentities().iterator();
+       long p_id=0;
+       while(list.hasNext()){
+           ParticipantIdentity p = list.next();
+           if(p.getPlayer().getSummonerId()==id){
+               p_id=id;
+               break;
+           }
+       }
+        Iterator<Participant> p_list = gameApiManager.getRecentGamesInfo(Region.KR,game.getGameId()).getParticipants().iterator();
+       String lane=null;
+       while (p_list.hasNext()){
+           Participant p = p_list.next();
+           if(p.getParticipantId()==p_id){
+               lane=p.getTimeline().getLane();
+           }
+       }
+        line(lane,id,win);
+
+
     }
+    public <T>boolean check(T t) {
+        if (t == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public void line(String line,long id,boolean win){
+        if(line.equals("MIDDLE")){
+            MID mid = midRepository.findByPlayerid(id);
+            if(check(mid)){
+                mid.setTotalGame(mid.getTotalGame()+1);
+                if(win){
+                    mid.setWin(mid.getWin()+1);
+                }else{
+                    mid.setRose(mid.getRose()+1);
+                }
+            }else{
+                if(win){
+                    MID.of_p_w(id);
+                }else{
+                    MID.of_p_r(id);
+                }
+            }
+        }
+        if(line.equals("BOTTOM")){
 
+        }
+        if(line.equals("TOP")){
 
+        }
+        if(line.equals("JUNGGLE")){
+
+        }
+    }
 
 }

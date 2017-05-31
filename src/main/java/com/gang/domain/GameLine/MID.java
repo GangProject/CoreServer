@@ -33,4 +33,21 @@ public class MID {
 
     @Column(name="playerId")
     private long player_id;
+
+    public static MID of_p_w(long id){
+        return builder()
+                .player_id(id)
+                .totalGame(1)
+                .win(1)
+                .rose(0)
+                .build();
+    }
+    public static MID of_p_r(long id){
+        return builder()
+                .player_id(id)
+                .totalGame(1)
+                .win(0)
+                .rose(1)
+                .build();
+    }
 }

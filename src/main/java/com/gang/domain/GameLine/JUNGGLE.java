@@ -11,15 +11,15 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table( name = "AP")
+@Table( name = "JUNGGLE")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AP {
+public class JUNGGLE{
     @Id
-    @Column(name= "ap_id")
+    @Column(name= "junggle_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int ap_id;
+    private int junggle_id;
 
     @Column(name="total_Game")
     private int totalGame;
