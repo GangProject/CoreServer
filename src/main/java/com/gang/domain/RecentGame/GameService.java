@@ -65,7 +65,7 @@ public class GameService {
     private BOTTOMRepository bottomRepository;
 
     @Autowired
-    private JUNGGLERepository apRepository;
+    private JUNGGLERepository junggleRepository;
 
     @Autowired
     private TOPRepository topRepository;
@@ -355,7 +355,7 @@ public class GameService {
     }
     public void line(String line,long id,boolean win){
         if(line.equals("MIDDLE")){
-            MID mid = midRepository.findByPlayerid(id);
+            MID mid = midRepository.findByplayerid(id);
             if(check(mid)){
                 mid.setTotalGame(mid.getTotalGame()+1);
                 if(win){
@@ -365,21 +365,66 @@ public class GameService {
                 }
             }else{
                 if(win){
-                    MID.of_p_w(id);
+                   mid=MID.of_p_w(id);
                 }else{
-                    MID.of_p_r(id);
+                    mid=MID.of_p_r(id);
+                }
+            }
+
+        }
+        if(line.equals("TOP")){
+            TOP top = topRepository.findByplayerid(id);
+            if(check(top)){
+                top.setTotalGame(top.getTotalGame()+1);
+                if(win){
+                    top.setWin(top.getWin()+1);
+                }else{
+                    top.setRose(top.getRose()+1);
+                }
+            }else{
+                if(win){
+                    TOP.of_p_w(id);
+                }else{
+                    TOP.of_p_r(id);
+                }
+            }
+            topRepository.save(top);
+        }
+        if(line.equals("JUNGGLE")){
+            JUNGGLE junggle = junggleRepository.findByplayerid(id);
+            if(check(junggle)){
+                junggle.setTotalGame(junggle.getTotalGame()+1);
+                if(win){
+                    junggle.setWin(junggle.getWin()+1);
+                }else{
+                    junggle.setRose(junggle.getRose()+1);
+                }
+            }else{
+                if(win){
+                    JUNGGLE.of_p_w(id);
+                }else{
+                    JUNGGLE.of_p_r(id);
                 }
             }
         }
         if(line.equals("BOTTOM")){
-
-        }
-        if(line.equals("TOP")){
-
-        }
-        if(line.equals("JUNGGLE")){
-
+            BOTTOM bottom = bottomRepository.findByplayerid(id);
+            if(check(bottom)){
+                bottom.setTotalGame(bottom.getTotalGame()+1);
+                if(win){
+                    bottom.setWin(bottom.getWin()+1);
+                }else{
+                    bottom.setRose(bottom.getRose()+1);
+                }
+            }else{
+                if(win){
+                    BOTTOM.of_p_w(id);
+                }else{
+                    BOTTOM.of_p_r(id);
+                }
+            }
         }
     }
+
 
 }

@@ -2,6 +2,7 @@ package com.gang.domain.GameLine;
 
 import lombok.*;
 
+
 import javax.persistence.*;
 
 /**
@@ -32,11 +33,11 @@ public class MID {
     private int rose;
 
     @Column(name="playerId")
-    private long player_id;
+    private long playerid;
 
     public static MID of_p_w(long id){
         return builder()
-                .player_id(id)
+                .playerid(id)
                 .totalGame(1)
                 .win(1)
                 .rose(0)
@@ -44,7 +45,7 @@ public class MID {
     }
     public static MID of_p_r(long id){
         return builder()
-                .player_id(id)
+                .playerid(id)
                 .totalGame(1)
                 .win(0)
                 .rose(1)

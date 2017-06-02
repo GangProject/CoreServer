@@ -31,5 +31,22 @@ public class BOTTOM {
     private int rose;
 
     @Column(name="playerId")
-    private long player_id;
+    private long playerid;
+
+    public static BOTTOM of_p_w(long id){
+        return builder()
+                .playerid(id)
+                .totalGame(1)
+                .win(1)
+                .rose(0)
+                .build();
+    }
+    public static BOTTOM of_p_r(long id){
+        return builder()
+                .playerid(id)
+                .totalGame(1)
+                .win(0)
+                .rose(1)
+                .build();
+    }
 }
