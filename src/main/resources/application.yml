@@ -1,15 +1,18 @@
 ## DataSource configuration
 spring:
   datasource:
+    #url: jdbc:mysql://127.0.0.1/core?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8
     url: jdbc:mysql://127.0.0.1/gang?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
     password: dltmdrl123
+    #password: test123
     driverClassName: com.mysql.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: false
     show-sql: true
     hibernate:
+      #ddl-auto: none
       ddl-auto: create-drop
       naming:
         strategy: org.hibernate.cfg.EJB3NamingStrategy
