@@ -1,6 +1,7 @@
 package com.gang.api;
 
 import com.gang.core.StringNotFoundException;
+import com.gang.domain.GameLine.TopLine;
 import com.gang.domain.RecentGame.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +48,15 @@ public class RecentGameController {
     public Game_info gameInfo(@RequestParam(value = "gid") long id) throws Exception{
         try {
             return gameService.gameInfo(id);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+    @ApiOperation(value = "잘하는 라인 보기",notes = "라인2개")
+    @RequestMapping(value = "/game/line",method = RequestMethod.GET)
+    public List<TopLine> game_line(@RequestParam(value = "gid") long id) throws Exception{
+        try {
+            return gameService.Top_Line(id);
         }catch (Exception e){
             throw e;
         }

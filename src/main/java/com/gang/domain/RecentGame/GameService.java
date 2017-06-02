@@ -330,21 +330,21 @@ public class GameService {
        while(list.hasNext()){
            ParticipantIdentity p = list.next();
            if(p.getPlayer().getSummonerId()==id){
-               p_id=id;
+               p_id=p.getParticipantId();
                break;
            }
        }
         Iterator<Participant> p_list = gameApiManager.getRecentGamesInfo(Region.KR,game.getGameId()).getParticipants().iterator();
        String lane=null;
+       System.out.println(p_id+"leeseung");
        while (p_list.hasNext()){
            Participant p = p_list.next();
            if(p.getParticipantId()==p_id){
                lane=p.getTimeline().getLane();
            }
        }
+       System.out.println(lane+"leeseung");
         line(lane,id,win);
-
-
     }
     public <T>boolean check(T t) {
         if (t == null) {
@@ -363,11 +363,12 @@ public class GameService {
                 }else{
                     mid.setRose(mid.getRose()+1);
                 }
+                midRepository.save(mid);
             }else{
                 if(win){
-                   mid=MID.of_p_w(id);
+                   midRepository.save(MID.of_p_w(id));
                 }else{
-                    mid=MID.of_p_r(id);
+                    midRepository.save(MID.of_p_r(id));
                 }
             }
 
@@ -381,14 +382,14 @@ public class GameService {
                 }else{
                     top.setRose(top.getRose()+1);
                 }
+                topRepository.save(top);
             }else{
                 if(win){
-                    TOP.of_p_w(id);
+                    topRepository.save(TOP.of_p_w(id));
                 }else{
-                    TOP.of_p_r(id);
+                    topRepository.save(TOP.of_p_r(id));
                 }
             }
-            topRepository.save(top);
         }
         if(line.equals("JUNGGLE")){
             JUNGGLE junggle = junggleRepository.findByplayerid(id);
@@ -399,11 +400,12 @@ public class GameService {
                 }else{
                     junggle.setRose(junggle.getRose()+1);
                 }
+                junggleRepository.save(junggle);
             }else{
                 if(win){
-                    JUNGGLE.of_p_w(id);
+                    junggleRepository.save(JUNGGLE.of_p_w(id));
                 }else{
-                    JUNGGLE.of_p_r(id);
+                    junggleRepository.save(JUNGGLE.of_p_r(id));
                 }
             }
         }
@@ -416,14 +418,58 @@ public class GameService {
                 }else{
                     bottom.setRose(bottom.getRose()+1);
                 }
+                bottomRepository.save(bottom);
             }else{
                 if(win){
-                    BOTTOM.of_p_w(id);
+                    bottomRepository.save(BOTTOM.of_p_w(id));
                 }else{
-                    BOTTOM.of_p_r(id);
+                    bottomRepository.save(BOTTOM.of_p_r(id));
                 }
             }
         }
+    }
+
+    public List<TopLine> Top_Line(long id){
+        MID mid = midRepository.findByplayerid(id);
+        BOTTOM bottom = bottomRepository.findByplayerid(id);
+        JUNGGLE junggle = junggleRepository.findByplayerid(id);
+        TOP top = topRepository.findByplayerid(id);
+        int mid_percent,bottom_percent,junggle_percent,top_percent;
+        if(mid==null){
+             mid_percent = 0;
+        }else{
+            mid_percent = (int)(((double) mid.getWin()/(double)mid.getTotalGame())*100);
+        }
+        if(bottom==null){
+             bottom_percent = 0;
+        }else{
+            bottom_percent = (int)(((double) bottom.getWin()/(double)bottom.getTotalGame())*100);
+        }
+        if(junggle==null){
+            junggle_percent = 0;
+        }else{
+            junggle_percent = (int)(((double) junggle.getWin()/(double)junggle.getTotalGame())*100);
+        }
+        if(top==null){
+            top_percent = 0;
+        }else{
+            top_percent = (int)(((double) top.getWin()/(double)top.getTotalGame())*100);
+        }
+
+        PriorityQueue<TopLine> p = new PriorityQueue<>();
+        p.add(new TopLine("미드",mid_percent));
+        p.add(new TopLine("바텀",bottom_percent));
+        p.add(new TopLine("정글",junggle_percent));
+        p.add(new TopLine("탑",top_percent));
+
+        List<TopLine> list = new ArrayList<>();
+        p.poll();
+        p.poll();
+        list.add(p.poll());
+        list.add(p.poll());
+
+
+        return list;
     }
 
 
