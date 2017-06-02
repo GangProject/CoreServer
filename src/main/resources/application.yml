@@ -4,8 +4,8 @@ spring:
     #url: jdbc:mysql://127.0.0.1/core?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8
     url: jdbc:mysql://127.0.0.1/gang?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
-    password: dltmdrl123
-    #password: test123
+    password: test123
+    #password: dltmdrl123
     driverClassName: com.mysql.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -20,4 +20,3 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 server:
   port: 8081
-
