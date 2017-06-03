@@ -31,6 +31,45 @@ public class AnalyzeUtil {
 
         return list;
     }
+    /*
+     * 최소 10게임 이상일때만 적용시킴. 아니면 그냥 자기 티어(챔프별로)
+       ..이상 +400 적용
+       70% > 400
+       65% > 300
+       60% > 200
+       55% > 100
+       50% > 0
+       45% > -100
+       40% > -200
+       35% > -300
+       30% > -400
+       ... 같게 적용(-400)
+     */
+    public int analyzeMmr(int mmr,double winningRate,int played){
+        if(played<10) return mmr; //10게임 미만이면 그냥 반환.
+
+        if(winningRate>=70){
+            mmr = mmr + 400;
+        }else if(winningRate>=65){
+            mmr = mmr + 300;
+        }else if(winningRate>=60){
+            mmr = mmr + 200;
+        }else if(winningRate>=55){
+            mmr = mmr + 100;
+        }else if(winningRate>=50){
+            mmr = mmr;
+        }else if(winningRate>=45){
+            mmr = mmr - 100;
+        }else if(winningRate>=40){
+            mmr = mmr - 200;
+        }else if(winningRate>=35){
+            mmr = mmr - 300;
+        }else{
+            mmr = mmr-400;
+        }
+
+        return mmr;
+    }
 
 
 }

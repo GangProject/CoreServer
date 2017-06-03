@@ -20,6 +20,7 @@ public class AggregateStatsDto implements Comparable<AggregateStatsDto>{
     private double avgAssist;
     private int played;
     private double avgCs;
+    private String tier;
 
     public static AggregateStatsDto of(AggregateStatsEntity ase,int id,String name){
         double kda = (double)(ase.getTotalChampionKills()+ase.getTotalAssists())/ase.getTotalDeathPerSession();
