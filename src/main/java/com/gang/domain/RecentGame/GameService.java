@@ -76,26 +76,47 @@ public class GameService {
         RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
         Iterator<Game> iterator = game.getGames().iterator();
         List<ResposeGame> recent_list = new ArrayList<>();
-        iteratorGame(iterator,name,id);
-        recent_list = recent(gameEntityRepository.findBySummonerid(id));
+        Game r=iterator.next();
+        recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
+        if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
+            return recent_list;
+        }else{
+            while (iterator.hasNext()){
+                    if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
+                        break;
+                    }else {
+                        game_line(r, id, r.getStats().isWin());
+                        ChampionEntity champ_id = championEntityRepository.findByChampid(r.getChampionId());
+                        SpellEntity spell1 = spellRepository.findBySpellid(r.getSpell1());
+                        SpellEntity spell2 = spellRepository.findBySpellid(r.getSpell2());
+                        HashMap<String, String> itemName = itemName(r);
+                        String k = timeChange(r);
+                        player(r, name);
+                        gameEntityRepository.save(GameEntity.of(r, k, id, champ_id, spell1, spell2, itemName));
+                    }
+                    r=iterator.next();
+            }
+            recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
+            return recent_list;
+        }
 
-        return recent_list;
+
     }
 
     public List<ResposeGame> dbgameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
         List<ResposeGame> recent_list = new ArrayList<>();
-        List<GameEntity> list= gameEntityRepository.findBySummonerid(id);
+        List<GameEntity> list= gameEntityRepository.findBySummoneridOrderByDateDesc(id);
         if (list.size()==0) {
-            System.out.println("here");
+            System.out.println("처음");
             RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
             Iterator<Game> iterator = game.getGames().iterator();
             iteratorGame(iterator,name,id);
-            recent_list = recent(gameEntityRepository.findBySummonerid(id));
+            recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
             return recent_list;
         }else{
-            System.out.println("here2");
-            recent_list = recent(gameEntityRepository.findBySummonerid(id));
+            System.out.println("두번쨰");
+            recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
             return recent_list;
     }
 
@@ -146,7 +167,7 @@ public class GameService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         String dateString =formatter.format(date);
         String now=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString();
-        int time=0;
+        long time=0;
         String t;
         if(!dateString.equals(now)){
             time = Integer.parseInt(now)-Integer.parseInt(dateString);
@@ -156,8 +177,16 @@ public class GameService {
             formatter = new SimpleDateFormat("yyyyMMddHH");
              dateString = formatter.format(date);
              now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH")).toString();
-            time = Integer.parseInt(now)-Integer.parseInt(dateString);
-            t=time+"시간전";
+            if(dateString.equals(now)){
+                formatter = new SimpleDateFormat("yyyyMMddHHmm");
+                dateString = formatter.format(date);
+                now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")).toString();
+                time = Long.parseLong(now)-Long.parseLong(dateString);
+                t=time+"분전";
+            }else {
+                time = Integer.parseInt(now) - Integer.parseInt(dateString);
+                t = time + "시간전";
+            }
             return t;
         }
     }

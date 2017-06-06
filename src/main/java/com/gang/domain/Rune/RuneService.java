@@ -31,10 +31,23 @@ public class RuneService {
 
         RuneList list = runeApiManager.getRune();
         Iterator<String> iterator = list.getData().keySet().iterator();
-        while(iterator.hasNext()){
-            String key = iterator.next();
-           RuneEntity r =RuneEntity.of(list.getData().get(key).getId(),list.getData().get(key).getName());
-           runeEntityRepository.save(r);
+        List<RuneEntity> r1 = runeEntityRepository.findAll();
+        if(r1.size()==0) {
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                RuneEntity r = RuneEntity.of(list.getData().get(key).getId(), list.getData().get(key).getName());
+                runeEntityRepository.save(r);
+            }
+        }else if(r1.size()!=list.getData().keySet().size()){
+            for(RuneEntity ru : r1){
+                runeEntityRepository.delete(ru);
+            }
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                RuneEntity r = RuneEntity.of(list.getData().get(key).getId(), list.getData().get(key).getName());
+                runeEntityRepository.save(r);
+            }
+
         }
 
         return runeEntityRepository.findAll();

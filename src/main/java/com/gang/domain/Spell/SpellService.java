@@ -24,10 +24,22 @@ public class SpellService {
     public List<SpellEntity> spell() throws Exception{
         SummonerSpellList list = spellApiManager.getDataSummonerSpellList(Region.KR);
         Iterator<SummonerSpell> s = list.getData().values().iterator();
-        while(s.hasNext()){
-            SummonerSpell spell = s.next();
-            spellRepository.save(SpellEntity.of(spell));
+        List<SpellEntity> sp = spellRepository.findAll();
+        if(sp.size()==0){
+            while(s.hasNext()){
+                SummonerSpell spell = s.next();
+                spellRepository.save(SpellEntity.of(spell));
+            }
+        }else if(sp.size()!=list.getData().values().size()){
+            for(SpellEntity sp1 : sp){
+                spellRepository.delete(sp1);
+            }
+            while(s.hasNext()){
+                SummonerSpell spell = s.next();
+                spellRepository.save(SpellEntity.of(spell));
+            }
         }
+
         return spellRepository.findAll();
     }
 }

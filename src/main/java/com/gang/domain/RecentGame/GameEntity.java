@@ -90,6 +90,9 @@ public class GameEntity {
     @Column(name = "gameassist")
     private  int assist;
 
+    @Column(name = "gamedate")
+    private  long date;
+
     @OneToMany(mappedBy = "Game")
     private List<PlayerEntity> p;
 
@@ -109,6 +112,7 @@ public class GameEntity {
                 .gameMode(game.getGameMode())
                 .subType(game.getSubType())
                 .createDate(time)
+                .date(game.getCreateDate())
                 .map(game.getMapId())
                 .teamId(game.getTeamId())
                 .summonerid(id)

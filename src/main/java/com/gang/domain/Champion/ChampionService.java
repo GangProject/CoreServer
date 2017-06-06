@@ -29,12 +29,24 @@ public class ChampionService {
     public List<ChampionEntity> list() throws RiotApiException,StringNotFoundException,InterruptedException{
         RiotApi api = new RiotApi("RGAPI-e8372943-2ac3-4bed-8d2c-86f9c86174fe");
         ChampionList championList;
-        championList = championApiManager.getDataChampionList(Region.KR,ChampData.ALL);
-        System.out.print(championList.getKeys().values());
+        List<ChampionEntity> championList_db=championEntityRepository.findAll();
+        championList = championApiManager.getDataChampionList(Region.KR, ChampData.ALL);
         Iterator<String> iterator = championList.getKeys().values().iterator();
-        while (iterator.hasNext()) {
-            String s = iterator.next();
-            championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName()));
+        if(championList_db.size()==0) {
+            while (iterator.hasNext()) {
+                String s = iterator.next();
+                championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName()));
+            }
+
+        }else if(championList_db.size()!=championList.getKeys().values().size()){
+            for(ChampionEntity c : championList_db){
+                championEntityRepository.delete(c);
+            }
+            while (iterator.hasNext()) {
+                String s = iterator.next();
+                championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName()));
+            }
+
         }
         return championEntityRepository.findAll();
     }

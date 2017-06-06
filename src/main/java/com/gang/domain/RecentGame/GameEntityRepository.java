@@ -8,5 +8,5 @@ import java.util.List;
  * Created by seungki on 2017-04-07.
  */
 public interface GameEntityRepository extends JpaRepository<GameEntity,Integer>{
-    List<GameEntity> findBySummonerid(long id);
+    List<GameEntity> findBySummoneridOrderByDateDesc(long id);
 }

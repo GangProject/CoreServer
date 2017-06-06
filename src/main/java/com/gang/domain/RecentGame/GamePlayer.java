@@ -70,6 +70,7 @@ public class GamePlayer {
                 .ward(p.getStats().getWardsPlaced())
                 .damage(p.getStats().getTotalDamageDealtToChampions())
                 .tier(tier)
+                .cs(p.getStats().getMinionsKilled())
                 .build();
     }
 

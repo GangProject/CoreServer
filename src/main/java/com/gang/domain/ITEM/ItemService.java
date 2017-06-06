@@ -25,9 +25,20 @@ public class ItemService {
     public List<ItemEntity> recentItem() throws Exception{
         ItemList itemList=itemApiManager.getDataItemList(Region.KR);
         Iterator<Item> iterator=itemList.getData().values().iterator();
-        while(iterator.hasNext()){
-            Item item =iterator.next();
-            itemEntityRepository.save(ItemEntity.of(item));
+        List<ItemEntity> it = itemEntityRepository.findAll();
+        if(it.size()==0){
+            while(iterator.hasNext()){
+                Item item =iterator.next();
+                itemEntityRepository.save(ItemEntity.of(item));
+            }
+        }else if(it.size()!=itemList.getData().values().size()){
+            for(ItemEntity item:it){
+                itemEntityRepository.delete(item);
+            }
+            while(iterator.hasNext()){
+                Item item =iterator.next();
+                itemEntityRepository.save(ItemEntity.of(item));
+            }
         }
         return itemEntityRepository.findAll();
     }

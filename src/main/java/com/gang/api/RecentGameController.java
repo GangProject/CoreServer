@@ -28,6 +28,7 @@ public class RecentGameController {
     @RequestMapping(value = "/dbGame",method = RequestMethod.GET)
     public List<ResposeGame> game(@RequestParam(value = "name") String name) throws Exception{
         try {
+            System.out.println("seungki");
             return gameService.dbgameList(name);
         }catch (Exception e){
             throw e;
@@ -35,8 +36,9 @@ public class RecentGameController {
     }
     @ApiOperation(value = " 전적 갱신", notes = "전적갱신")
     @RequestMapping(value = "/game",method = RequestMethod.GET)
-    public List<ResposeGame> game(@RequestParam(value = "name") String name,int a) throws Exception{
+    public List<ResposeGame> game_refresh(@RequestParam(value = "name") String name) throws Exception{
         try {
+            System.out.println("seungki_2");
             return gameService.gameList(name);
         }catch (Exception e){
             throw e;
