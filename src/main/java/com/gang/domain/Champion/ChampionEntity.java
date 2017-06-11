@@ -28,7 +28,7 @@ public class ChampionEntity {
     @NonNull
     private String name;
 
-    @Column(name = "champid")
+    @Column(name = "championId")
     @NonNull
     private int champid;
 

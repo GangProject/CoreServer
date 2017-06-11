@@ -93,8 +93,6 @@ public class GameEntity {
     @Column(name = "gamedate")
     private  long date;
 
-    @OneToMany(mappedBy = "Game")
-    private List<PlayerEntity> p;
 
     @Transient
     private long damage;

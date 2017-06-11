@@ -28,7 +28,7 @@ public class PlayerEntity{
     @Column(name = "gameid")
     private long gameid;
 
-    @Column(name = "team")
+    @Column(name = "teamid")
     private int teamid;
 
     @Column(name ="championId")
@@ -40,9 +40,7 @@ public class PlayerEntity{
     @Column(name="playerName")
     private String playername;
 
-    @ManyToOne
-    @JoinColumn(name="game_id",insertable = false,updatable = false)
-    private GameEntity Game;
+
 
     public static PlayerEntity of(Game g, Player p,String name){
         return builder()
