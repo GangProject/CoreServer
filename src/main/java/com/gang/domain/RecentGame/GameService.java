@@ -234,7 +234,9 @@ public class GameService {
     public void iteratorGame(Iterator<Game> iterator,String name,long id) throws Exception{
         while (iterator.hasNext()) {
             Game g = iterator.next();
-            game_line(g,id,g.getStats().isWin());
+            if(!g.getGameMode().equals("ARAM")) {
+                game_line(g, id, g.getStats().isWin());
+            }
             ChampionEntity champ_id = championEntityRepository.findByChampid(g.getChampionId());
             SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
@@ -356,6 +358,7 @@ public class GameService {
 
        Iterator<ParticipantIdentity> list = gameApiManager.getRecentGamesInfo(Region.KR,game.getGameId()).getParticipantIdentities().iterator();
        long p_id=0;
+       System.out.println(list.next().getParticipantId()+"dami");
        while(list.hasNext()){
            ParticipantIdentity p = list.next();
            if(p.getPlayer().getSummonerId()==id){

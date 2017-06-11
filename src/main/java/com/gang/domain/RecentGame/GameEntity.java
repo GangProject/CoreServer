@@ -93,6 +93,9 @@ public class GameEntity {
     @Column(name = "gamedate")
     private  long date;
 
+    @Column(name="win")
+    private boolean win;
+
 
     @Transient
     private long damage;
@@ -106,6 +109,7 @@ public class GameEntity {
     public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem
                                 ){
         return GameEntity.builder()
+                .win(game.getStats().isWin())
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())
                 .subType(game.getSubType())
