@@ -11,17 +11,17 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table( name = "JUNGGLE")
+@Table( name = "Junggle")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JUNGGLE{
+public class Junggle{
     @Id
     @Column(name= "junggle_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int junggle_id;
 
-    @Column(name="total_Game")
+    @Column(name="total_game")
     private int totalGame;
 
     @Column(name="win")
@@ -33,7 +33,7 @@ public class JUNGGLE{
     @Column(name="playerId")
     private long playerid;
 
-    public static JUNGGLE of_p_w(long id){
+    public static Junggle of_p_w(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)
@@ -41,7 +41,7 @@ public class JUNGGLE{
                 .rose(0)
                 .build();
     }
-    public static JUNGGLE of_p_r(long id){
+    public static Junggle of_p_r(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)

@@ -9,6 +9,10 @@ DROP TABLE IF EXISTS CORE.ItemEntity;
 DROP TABLE IF EXISTS CORE.ChampionStatsEntity;
 DROP TABLE IF EXISTS CORE.ChampionEntity;
 DROP TABLE IF EXISTS CORE.AggregateStatsEntity;
+DROP TABLE IF EXISTS CORE.Bottom;
+DROP TABLE IF EXISTS CORE.Junggle;
+DROP TABLE IF EXISTS CORE.Top;
+DROP TABLE IF EXISTS CORE.Mid;
 
 create table CORE.SummonerEntity(
 	`id` int Not Null auto_increment primary Key,
@@ -110,3 +114,38 @@ create table CORE.AggregateStatsEntity(
     `totalDeathPerSession` int Not Null,
     `totalMinionKills` int Not Null
 );
+
+create table CORE.Bottom(
+	`bottom_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+create table CORE.Junggle(
+	`junggle_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+create table CORE.Mid(
+	`mid_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+create table CORE.Top(
+	`top_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+
+

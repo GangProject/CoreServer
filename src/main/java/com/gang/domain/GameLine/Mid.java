@@ -2,26 +2,28 @@ package com.gang.domain.GameLine;
 
 import lombok.*;
 
+
 import javax.persistence.*;
 
 /**
- * Created by seungki on 2017-05-31.
+ * Created by seungki on 2017-05-23.
  */
 @Getter
 @Setter
 @Entity
 @Data
-@Table( name = "BOTTOM")
+@Table( name = "Mid")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BOTTOM {
-    @Id
-    @Column(name= "bottom_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int bottom_id;
+public class Mid{
 
-    @Column(name="total_Game")
+    @Id
+    @Column(name= "mid_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int mid_id;
+
+    @Column(name="total_game")
     private int totalGame;
 
     @Column(name="win")
@@ -33,7 +35,7 @@ public class BOTTOM {
     @Column(name="playerId")
     private long playerid;
 
-    public static BOTTOM of_p_w(long id){
+    public static Mid of_p_w(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)
@@ -41,7 +43,7 @@ public class BOTTOM {
                 .rose(0)
                 .build();
     }
-    public static BOTTOM of_p_r(long id){
+    public static Mid of_p_r(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)

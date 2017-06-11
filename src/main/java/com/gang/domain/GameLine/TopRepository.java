@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Created by seungki on 2017-05-23.
  */
-public interface MIDRepository extends JpaRepository<MID,Integer>{
-    MID findByplayerid(long id);
+public interface TopRepository extends JpaRepository<Top,Integer>{
+    Top findByplayerid(long id);
 }

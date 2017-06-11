@@ -59,16 +59,16 @@ public class GameService {
     private LeagueApiManager leagueApiManager;
 
     @Autowired
-    private MIDRepository midRepository;
+    private MidRepository midRepository;
 
     @Autowired
-    private BOTTOMRepository bottomRepository;
+    private BottomRepository bottomRepository;
 
     @Autowired
-    private JUNGGLERepository junggleRepository;
+    private JunggleRepository junggleRepository;
 
     @Autowired
-    private TOPRepository topRepository;
+    private TopRepository topRepository;
 
 
     public List<ResposeGame> gameList(String name) throws Exception {
@@ -384,7 +384,7 @@ public class GameService {
     }
     public void line(String line,long id,boolean win){
         if(line.equals("MIDDLE")){
-            MID mid = midRepository.findByplayerid(id);
+            Mid mid = midRepository.findByplayerid(id);
             if(check(mid)){
                 mid.setTotalGame(mid.getTotalGame()+1);
                 if(win){
@@ -395,15 +395,15 @@ public class GameService {
                 midRepository.save(mid);
             }else{
                 if(win){
-                   midRepository.save(MID.of_p_w(id));
+                   midRepository.save(Mid.of_p_w(id));
                 }else{
-                    midRepository.save(MID.of_p_r(id));
+                    midRepository.save(Mid.of_p_r(id));
                 }
             }
 
         }
         if(line.equals("TOP")){
-            TOP top = topRepository.findByplayerid(id);
+            Top top = topRepository.findByplayerid(id);
             if(check(top)){
                 top.setTotalGame(top.getTotalGame()+1);
                 if(win){
@@ -414,14 +414,14 @@ public class GameService {
                 topRepository.save(top);
             }else{
                 if(win){
-                    topRepository.save(TOP.of_p_w(id));
+                    topRepository.save(Top.of_p_w(id));
                 }else{
-                    topRepository.save(TOP.of_p_r(id));
+                    topRepository.save(Top.of_p_r(id));
                 }
             }
         }
         if(line.equals("JUNGGLE")){
-            JUNGGLE junggle = junggleRepository.findByplayerid(id);
+            Junggle junggle = junggleRepository.findByplayerid(id);
             if(check(junggle)){
                 junggle.setTotalGame(junggle.getTotalGame()+1);
                 if(win){
@@ -432,14 +432,14 @@ public class GameService {
                 junggleRepository.save(junggle);
             }else{
                 if(win){
-                    junggleRepository.save(JUNGGLE.of_p_w(id));
+                    junggleRepository.save(Junggle.of_p_w(id));
                 }else{
-                    junggleRepository.save(JUNGGLE.of_p_r(id));
+                    junggleRepository.save(Junggle.of_p_r(id));
                 }
             }
         }
         if(line.equals("BOTTOM")){
-            BOTTOM bottom = bottomRepository.findByplayerid(id);
+            Bottom bottom = bottomRepository.findByplayerid(id);
             if(check(bottom)){
                 bottom.setTotalGame(bottom.getTotalGame()+1);
                 if(win){
@@ -450,19 +450,19 @@ public class GameService {
                 bottomRepository.save(bottom);
             }else{
                 if(win){
-                    bottomRepository.save(BOTTOM.of_p_w(id));
+                    bottomRepository.save(Bottom.of_p_w(id));
                 }else{
-                    bottomRepository.save(BOTTOM.of_p_r(id));
+                    bottomRepository.save(Bottom.of_p_r(id));
                 }
             }
         }
     }
 
     public List<TopLine> Top_Line(long id){
-        MID mid = midRepository.findByplayerid(id);
-        BOTTOM bottom = bottomRepository.findByplayerid(id);
-        JUNGGLE junggle = junggleRepository.findByplayerid(id);
-        TOP top = topRepository.findByplayerid(id);
+        Mid mid = midRepository.findByplayerid(id);
+        Bottom bottom = bottomRepository.findByplayerid(id);
+        Junggle junggle = junggleRepository.findByplayerid(id);
+        Top top = topRepository.findByplayerid(id);
         int mid_percent,bottom_percent,junggle_percent,top_percent;
         if(mid==null){
              mid_percent = 0;
