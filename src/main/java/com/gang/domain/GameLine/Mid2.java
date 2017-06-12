@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table( name = "Mid")
+@Table( name = "Mid2")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Mid{
+public class Mid2{
 
     @Id
     @Column(name= "mid_id")
@@ -35,7 +35,7 @@ public class Mid{
     @Column(name="playerId")
     private long playerid;
 
-    public static Mid of_p_w(long id){
+    public static Mid2 of_p_w(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)
@@ -43,7 +43,7 @@ public class Mid{
                 .rose(0)
                 .build();
     }
-    public static Mid of_p_r(long id){
+    public static Mid2 of_p_r(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)

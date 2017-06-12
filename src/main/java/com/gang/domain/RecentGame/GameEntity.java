@@ -106,13 +106,13 @@ public class GameEntity {
     @Transient
     private long gold;
 
-    public static GameEntity of(Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem
+    public static GameEntity of(String gameMode,Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem
                                 ){
         return GameEntity.builder()
                 .win(game.getStats().isWin())
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())
-                .subType(game.getSubType())
+                .subType(gameMode)
                 .createDate(time)
                 .date(game.getCreateDate())
                 .map(game.getMapId())

@@ -59,7 +59,7 @@ public class GameService {
     private LeagueApiManager leagueApiManager;
 
     @Autowired
-    private MidRepository midRepository;
+    private Mid2Repository midRepository;
 
     @Autowired
     private BottomRepository bottomRepository;
@@ -77,6 +77,7 @@ public class GameService {
         Iterator<Game> iterator = game.getGames().iterator();
         List<ResposeGame> recent_list = new ArrayList<>();
         Game r=iterator.next();
+        String gameMdde;
         recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
         if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
             return recent_list;
@@ -92,7 +93,16 @@ public class GameService {
                         HashMap<String, String> itemName = itemName(r);
                         String k = timeChange(r);
                         player(r, name);
-                        gameEntityRepository.save(GameEntity.of(r, k, id, champ_id, spell1, spell2, itemName));
+                        if(r.getSubType().equals("RANKED_SOLO_5x5")){
+                            gameMdde="솔랭";
+                        }else if(r.getSubType().equals("RANKED_FLEX_SR")){
+                            gameMdde="자유랭크";
+                        }else if(r.getSubType().equals("ARAM")){
+                            gameMdde="칼바람";
+                        }else{
+                            gameMdde="일반";
+                        }
+                        gameEntityRepository.save(GameEntity.of(gameMdde,r, k, id, champ_id, spell1, spell2, itemName));
                     }
                     r=iterator.next();
             }
@@ -234,16 +244,39 @@ public class GameService {
     public void iteratorGame(Iterator<Game> iterator,String name,long id) throws Exception{
         while (iterator.hasNext()) {
             Game g = iterator.next();
-            if(!g.getGameMode().equals("ARAM")) {
+            if(g.getSubType().equals("RANKED_SOLO_5x5")){
                 game_line(g, id, g.getStats().isWin());
             }
+            if(g.getSubType().equals("RANKED_FLEX_SR")){
+                game_line(g, id, g.getStats().isWin());
+            }
+            if(g.getSubType().equals("ARAM")){
+
+            }
+            if(g.getSubType().equals("NORMAL")) {
+
+            }
+
             ChampionEntity champ_id = championEntityRepository.findByChampid(g.getChampionId());
             SpellEntity spell1 = spellRepository.findBySpellid(g.getSpell1());
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
             HashMap<String, String> itemName = itemName(g);
             String k = timeChange(g);
             player(g, name);
-            gameEntityRepository.save(GameEntity.of(g, k, id, champ_id, spell1, spell2, itemName));
+            String gameMode=null;
+            if(g.getSubType().equals("RANKED_SOLO_5x5")){
+                gameMode="솔랭";
+            }
+            if(g.getSubType().equals("RANKED_FLEX_SR")){
+                gameMode="자유랭크";
+            }
+            if(g.getSubType().equals("ARAM")){
+                gameMode="칼바람";
+            }
+            if(g.getSubType().equals("NORMAL")){
+                gameMode="일반";
+            }
+            gameEntityRepository.save(GameEntity.of(gameMode,g, k, id, champ_id, spell1, spell2, itemName));
         }
     }
 
@@ -358,7 +391,7 @@ public class GameService {
 
        Iterator<ParticipantIdentity> list = gameApiManager.getRecentGamesInfo(Region.KR,game.getGameId()).getParticipantIdentities().iterator();
        long p_id=0;
-       System.out.println(list.next().getParticipantId()+"dami");
+
        while(list.hasNext()){
            ParticipantIdentity p = list.next();
            if(p.getPlayer().getSummonerId()==id){
@@ -376,6 +409,7 @@ public class GameService {
            }
        }
        System.out.println(lane+"leeseung");
+
         line(lane,id,win);
     }
     public <T>boolean check(T t) {
@@ -386,8 +420,9 @@ public class GameService {
         }
     }
     public void line(String line,long id,boolean win){
+        System.out.println(line+"power");
         if(line.equals("MIDDLE")){
-            Mid mid = midRepository.findByplayerid(id);
+            Mid2 mid = midRepository.findByplayerid(id);
             if(check(mid)){
                 mid.setTotalGame(mid.getTotalGame()+1);
                 if(win){
@@ -398,9 +433,9 @@ public class GameService {
                 midRepository.save(mid);
             }else{
                 if(win){
-                   midRepository.save(Mid.of_p_w(id));
+                   midRepository.save(Mid2.of_p_w(id));
                 }else{
-                    midRepository.save(Mid.of_p_r(id));
+                    midRepository.save(Mid2.of_p_r(id));
                 }
             }
 
@@ -462,7 +497,7 @@ public class GameService {
     }
 
     public List<TopLine> Top_Line(long id){
-        Mid mid = midRepository.findByplayerid(id);
+        Mid2 mid = midRepository.findByplayerid(id);
         Bottom bottom = bottomRepository.findByplayerid(id);
         Junggle junggle = junggleRepository.findByplayerid(id);
         Top top = topRepository.findByplayerid(id);
