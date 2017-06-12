@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table(name="ChampionEntity")
+@Table(name="\"ChampionEntity\"")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -32,11 +32,14 @@ public class ChampionEntity {
     @NonNull
     private int champid;
 
+    @Column(name = "e_name")
+    private String e_name;
 
-    public static ChampionEntity of(int id,String name){
+    public static ChampionEntity of(int id,String name,String e_name){
         return ChampionEntity.builder()
                 .champid(id)
                 .name(name)
+                .e_name(e_name)
                 .build();
     }
 

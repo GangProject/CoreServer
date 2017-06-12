@@ -35,7 +35,8 @@ public class ChampionService {
         if(championList_db.size()==0) {
             while (iterator.hasNext()) {
                 String s = iterator.next();
-                championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName()));
+                championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName(),
+                        championList.getData().get(s).getKey()));
             }
 
         }else if(championList_db.size()!=championList.getKeys().values().size()){
@@ -44,7 +45,8 @@ public class ChampionService {
             }
             while (iterator.hasNext()) {
                 String s = iterator.next();
-                championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName()));
+                championEntityRepository.save(ChampionEntity.of(championList.getData().get(s).getId(), championList.getData().get(s).getName(),
+                        championList.getData().get(s).getKey()));
             }
 
         }

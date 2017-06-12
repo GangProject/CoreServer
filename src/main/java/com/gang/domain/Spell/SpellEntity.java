@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table(name="SpellEntity")
+@Table(name="\"SpellEntity\"")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
