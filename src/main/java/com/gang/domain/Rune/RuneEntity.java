@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Data
-@Table( name = "RuneEnity")
+@Table( name = "RuneEntity")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

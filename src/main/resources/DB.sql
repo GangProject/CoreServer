@@ -9,6 +9,10 @@ DROP TABLE IF EXISTS CORE.ItemEntity;
 DROP TABLE IF EXISTS CORE.ChampionStatsEntity;
 DROP TABLE IF EXISTS CORE.ChampionEntity;
 DROP TABLE IF EXISTS CORE.AggregateStatsEntity;
+DROP TABLE IF EXISTS CORE.Bottom;
+DROP TABLE IF EXISTS CORE.Junggle;
+DROP TABLE IF EXISTS CORE.Top;
+DROP TABLE IF EXISTS CORE.Mid;
 
 create table CORE.SummonerEntity(
 	`id` int Not Null auto_increment primary Key,
@@ -41,7 +45,7 @@ create table CORE.ResultEntity(
     `wins` int Not Null,
     `losses` int Not Null,
     `leaguePoints` int Not Null,
-    foreign key(summonerId) references SummonerEntity(summonerId) ON UPDATE CASCADE ON DELETE CASCADE
+    foreign key(summonerId) references CORE.SummonerEntity(summonerId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 create table CORE.GameEntity(
@@ -56,16 +60,17 @@ create table CORE.GameEntity(
     `teamId` int Not Null,
     `spell1` varchar(50) Not Null,
     `spell2` varchar(50) Not Null,
-	`item0` varchar(50) Not Null,
-    `item1` varchar(50) Not Null,
-    `item2` varchar(50) Not Null,
-    `item3` varchar(50) Not Null,
-    `item4` varchar(50) Not Null,
-    `item5` varchar(50) Not Null,
-    `item6` varchar(50) Not Null,
+	`item0` varchar(50) ,
+    `item1` varchar(50) ,
+    `item2` varchar(50) ,
+    `item3` varchar(50) ,
+    `item4` varchar(50) ,
+    `item5` varchar(50) ,
+    `item6` varchar(50) ,
     `gameKill` int Not Null,
     `gameDeath` int Not Null,
-    `gameAssist` int Not Null
+    `gameAssist` int Not Null,
+    `gamedate` long Not Null
 );
 
 create table CORE.RankedStatusEntity(
@@ -76,17 +81,18 @@ create table CORE.RankedStatusEntity(
 
 create table CORE.PlayerEntity(
 	`id` int Not Null auto_increment primary Key,
-    `gameId` long Not Null,
-    `teamId` long Not Null,
+    `gameid` long Not Null,
+    `teamid` long Not Null,
     `championId` int Not Null,
     `playerId` long Not Null,
     `playerName` varchar(50) Not Null
+
 );
 
 create table CORE.ItemEntity(
 	`id` int Not Null auto_increment primary Key,
     `itemId` int Not Null,
-    `name` varchar(50) Not Null
+    `name` varchar(100)
 );
 
 create table CORE.ChampionStatsEntity(
@@ -110,3 +116,38 @@ create table CORE.AggregateStatsEntity(
     `totalDeathPerSession` int Not Null,
     `totalMinionKills` int Not Null
 );
+
+create table CORE.Bottom(
+	`bottom_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+create table CORE.Junggle(
+	`junggle_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+create table CORE.Mid(
+	`mid_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+create table CORE.Top(
+	`top_id` int Not Null auto_increment primary Key,
+    `total_game` int Not Null,
+    `win` int Not Null,
+    `rose` int Not Null,
+    `playerid` long Not Null
+);
+
+
+

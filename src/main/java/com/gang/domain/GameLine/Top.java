@@ -11,11 +11,11 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table( name = "TOP")
+@Table( name = "Top")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TOP {
+public class Top{
 
     @Id
     @Column(name= "top_id")
@@ -34,7 +34,7 @@ public class TOP {
     @Column(name="playerId")
     private long playerid;
 
-    public static TOP of_p_w(long id){
+    public static Top of_p_w(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)
@@ -42,7 +42,7 @@ public class TOP {
                 .rose(0)
                 .build();
     }
-    public static TOP of_p_r(long id){
+    public static Top of_p_r(long id){
         return builder()
                 .playerid(id)
                 .totalGame(1)
