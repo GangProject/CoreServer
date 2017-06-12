@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Data
-@Table(name="ItemEntity")
+@Table(name="\"ItemEntity\"")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

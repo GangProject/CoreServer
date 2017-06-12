@@ -6,6 +6,7 @@ import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Game.RecentGames;
 import net.rithms.riot.dto.Match.MatchDetail;
+import net.rithms.riot.dto.Static.MasteryList;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,4 +58,24 @@ public class GameApiManager extends RiotApiManager {
 
         return matchDetail;
     }
+    public MasteryList getMastery(Region region) throws Exception{
+        MasteryList masteryList=null;
+        Boolean success = false;
+        while(!success){ //key 횟수 초과될 수 있으므로 , 돌리기용.
+            System.out.println(key.toString());
+            try {
+                masteryList = api.getDataMasteryList(Region.KR);
+                success = true;
+            } catch (RateLimitException e) { //key 요청 횟수 초과시
+                System.out.println("key 바꿈");
+                changeKey();
+                Thread.sleep(1000); //1초 동안 sleep
+            } catch (RiotApiException e) {
+                System.out.println(e);
+            }
+        }
+
+        return masteryList;
+    }
+
 }

@@ -150,6 +150,13 @@ create table core.Top(
     `playerid` long Not Null
 );
 
+create table core.MasteryEntity(
+   `id` int Not Null auto_increment primary Key,
+    `masteryid` int Not Null,
+    `masteryname` VARCHAR(100) Not Null
+
+);
+
 
 
 
