@@ -36,6 +36,16 @@ public class SummonerController {
         }
     }
 
+    @GetMapping("/soloMmr")
+    @ApiOperation(value = "솔랭 mmr", notes = "솔랭 mmr 반환")
+    public ResponseDto mmr(@RequestParam(value = "name")String name){
+        try{
+            return summonerService.mmr(name);
+        }catch(Exception e){
+            return ResponseDto.ofFailure(null,"실패했습니다.");
+        }
+    }
+
     @GetMapping("/save")
     @ApiOperation(value = "소환사 저장", notes = "소환사 저장")
     public ResponseDto save(@RequestParam(value = "name")String name){
@@ -76,6 +86,4 @@ public class SummonerController {
             return ResponseDto.ofFailure(null,"실패했습니다.");
         }
     }
-
-
 }

@@ -78,8 +78,11 @@ public class RankedStatsService {
          */
         for (ChampionStatsEntity c : rankedStatsEntity.getChampions()) {
             int champId = c.getChampionId();
-
-            AggregateStatsDto aggregateStatsDto = AggregateStatsDto.of(c.getStats(),champId,"피즈");
+            String champName="";
+            if(champId!=0) {
+                champName = championEntityRepository.findByChampid(champId).getName();
+            }
+            AggregateStatsDto aggregateStatsDto = AggregateStatsDto.of(c.getStats(),champId,champName);
             int mmr = Tier.getMmrByTier(resultEntity.getTier(),resultEntity.getDivision());
             int played = aggregateStatsDto.getPlayed();
             double winningRate = aggregateStatsDto.getWinningRate();
@@ -96,6 +99,7 @@ public class RankedStatsService {
         }
 
         Collections.sort(stats);
+        if(stats!=null && stats.size()>0) stats.remove(0);
 
         return stats;
     }

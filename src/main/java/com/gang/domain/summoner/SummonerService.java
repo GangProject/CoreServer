@@ -2,6 +2,7 @@ package com.gang.domain.summoner;
 
 import java.util.List;
 import com.gang.api.common.ResponseDto;
+import com.gang.constant.Tier;
 import com.gang.core.AnalyzeUtil;
 import com.gang.core.RiotApiManager;
 import com.gang.core.StringNotFoundException;
@@ -54,6 +55,24 @@ public class SummonerService {
     @Transactional(readOnly = false)
     public void summonerRemove(String name){
         summonerRepository.delete(summonerRepository.findByName(name));
+    }
+
+    public ResponseDto mmr(String name) throws StringNotFoundException, InterruptedException{
+        MmrDto mmrDto = null;
+        int mmr = 0;
+        int analyzeMmr;
+        String tier = null;
+        ResultEntity resultEntity = null;
+
+        List<ResultEntity> list = infoSummoner(name);
+        if(list.size()>0){
+            resultEntity = list.get(0);
+            mmr = Tier.getMmrByTier(resultEntity.getTier(),resultEntity.getDivision());
+            analyzeMmr = analyzeUtil.analyzeMmr(mmr,resultEntity.getWiningRate(),resultEntity.getWins()+resultEntity.getLosses());
+            tier = Tier.getTierNameByMmr(analyzeMmr);
+            mmrDto = mmrDto.of(analyzeMmr,tier);
+        }
+        return ResponseDto.ofSuccess(mmrDto,"성공");
     }
 
     public ResponseDto challengerList() throws StringNotFoundException,InterruptedException{
