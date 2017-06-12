@@ -104,7 +104,8 @@ create table core.ChampionStatsEntity(
 create table core.ChampionEntity(
    `id` int Not Null auto_increment primary Key,
     `name` varchar(50) Not Null,
-    `championId` int Not Null
+    `championId` int Not Null,
+    `e_name` varchar(100) NOt null
 );
 
 create table core.AggregateStatsEntity(
