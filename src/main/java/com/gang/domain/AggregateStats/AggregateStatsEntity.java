@@ -45,6 +45,31 @@ public class AggregateStatsEntity {
     @Column(name = "totalMinionKills")
     private int totalMinionKills;
 
+    //추가
+    @Column(name = "totalGoldEarned")
+    private int totalGoldEarned;
+
+    @Column(name = "totalMaxChampionsKilled")
+    private int totalMaxChampionsKilled;
+
+    @Column(name = "totalMaxNumDeaths")
+    private int totalMaxNumDeaths;
+
+    @Column(name = "totalDamageDealt")
+    private int totalDamageDealt;
+
+    @Column(name = "totalDoubleKiils")
+    private int totalDoubleKills;
+
+    @Column(name = "totalTripleKiils")
+    private int totalTripleKills;
+
+    @Column(name = "totalQuadraKiils")
+    private int totalQuadraKills;
+
+    @Column(name = "totalPentaKiils")
+    private int totalPentaKills;
+
     @OneToOne
     @JoinColumn(name="id",insertable = false,updatable = false)
     private ChampionStatsEntity championStatsEntity;
@@ -58,6 +83,14 @@ public class AggregateStatsEntity {
                 .totalAssists(aggregatedStats.getTotalAssists())
                 .totalDeathPerSession(aggregatedStats.getTotalDeathsPerSession())
                 .totalMinionKills(aggregatedStats.getTotalMinionKills())
+                .totalGoldEarned(aggregatedStats.getTotalGoldEarned())
+                .totalMaxChampionsKilled(aggregatedStats.getMaxChampionsKilled())
+                .totalMaxNumDeaths(aggregatedStats.getMaxNumDeaths())
+                .totalDamageDealt(aggregatedStats.getTotalPhysicalDamageDealt()+aggregatedStats.getTotalMagicDamageDealt())
+                .totalDoubleKills(aggregatedStats.getTotalDoubleKills())
+                .totalTripleKills(aggregatedStats.getTotalTripleKills())
+                .totalQuadraKills(aggregatedStats.getTotalQuadraKills())
+                .totalPentaKills(aggregatedStats.getTotalPentaKills())
                 .build();
     }
 }

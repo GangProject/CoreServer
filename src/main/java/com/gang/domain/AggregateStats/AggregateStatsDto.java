@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
+
 /**
  * Created by Junwoo on 2017-04-27.
  */
@@ -21,6 +23,16 @@ public class AggregateStatsDto implements Comparable<AggregateStatsDto>{
     private int played;
     private double avgCs;
     private String tier;
+    //추가
+    private double avgGoldEarned;
+    private int totalMaxChampionsKilled;
+    private int totalMaxNumDeaths;
+    private double avgDamageDealt;
+    private int totalDoubleKills;
+    private int totalTripleKills;
+    private int totalQuadraKills;
+    private int totalPentaKills;
+
 
     public static AggregateStatsDto of(AggregateStatsEntity ase,int id,String name){
         double kda = (double)(ase.getTotalChampionKills()+ase.getTotalAssists())/ase.getTotalDeathPerSession();
@@ -29,6 +41,9 @@ public class AggregateStatsDto implements Comparable<AggregateStatsDto>{
         double avgDeath = (double)ase.getTotalDeathPerSession()/ase.getTotalSessionPlayed();
         double avgAssist = (double)ase.getTotalAssists()/ase.getTotalSessionPlayed();
         double avgCs = ase.getTotalMinionKills()/ase.getTotalSessionPlayed();
+
+        double avgGoldEarned = (double)ase.getTotalGoldEarned()/ase.getTotalSessionPlayed();
+        double avgDamageDealt = (double)ase.getTotalDamageDealt()/ase.getTotalSessionPlayed();
 
         return AggregateStatsDto.builder()
                 .id(id)
@@ -40,6 +55,14 @@ public class AggregateStatsDto implements Comparable<AggregateStatsDto>{
                 .avgAssist(avgAssist)
                 .avgCs(avgCs)
                 .played(ase.getTotalSessionPlayed())
+                .avgGoldEarned(avgGoldEarned)
+                .totalMaxChampionsKilled(ase.getTotalMaxChampionsKilled())
+                .totalMaxNumDeaths(ase.getTotalMaxNumDeaths())
+                .avgDamageDealt(avgDamageDealt)
+                .totalDoubleKills(ase.getTotalDoubleKills())
+                .totalTripleKills(ase.getTotalTripleKills())
+                .totalQuadraKills(ase.getTotalQuadraKills())
+                .totalPentaKills(ase.getTotalPentaKills())
                 .build();
     }
 
