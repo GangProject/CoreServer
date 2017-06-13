@@ -276,6 +276,7 @@ public class GameService {
             if(g.getSubType().equals("NORMAL")){
                 gameMode="일반";
             }
+            System.out.println(gameMode+"sek"+g.getChampionId());
             gameEntityRepository.save(GameEntity.of(gameMode,g, k, id, champ_id, spell1, spell2, itemName));
         }
     }
