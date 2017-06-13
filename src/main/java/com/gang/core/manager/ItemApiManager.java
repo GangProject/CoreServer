@@ -31,6 +31,8 @@ public class ItemApiManager extends RiotApiManager {
                 Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
                 System.out.println(e);
+                changeKey();
+                Thread.sleep(1000);
             }
         }
 
