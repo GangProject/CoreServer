@@ -96,6 +96,24 @@ public class GameEntity {
     @Column(name="win")
     private boolean win;
 
+    @Column(name="cs")
+    private int cs;
+
+    @Column(name = "pinkward")
+    private int pink;
+
+    @Column(name="playtime")
+    private String playtime;
+
+    @Column(name = "level")
+    private int level;
+
+    @Column(name = "durationTime")
+    private String durationTime;
+
+    @Column(name = "recordeKill")
+    private String rekill;
+
 
     @Transient
     private long damage;
@@ -106,21 +124,24 @@ public class GameEntity {
     @Transient
     private long gold;
 
-    public static GameEntity of(String gameMode,Game game, String time,Long id, ChampionEntity championEntity, SpellEntity spellEntity1,SpellEntity spellEntity2,HashMap<String,String> gameItem
+
+
+
+    public static GameEntity of(String re,String playtime,String createDate,String gameMode,Game game, String time,Long id, ChampionEntity championEntity, String spellEntity1,String spellEntity2,HashMap<String,String> gameItem
                                 ){
         return GameEntity.builder()
                 .win(game.getStats().isWin())
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())
                 .subType(gameMode)
-                .createDate(time)
+                .createDate(createDate)
                 .date(game.getCreateDate())
                 .map(game.getMapId())
                 .teamId(game.getTeamId())
                 .summonerid(id)
-                .champion(championEntity.getName())
-                .spell1(spellEntity1.getName())
-                .spell2(spellEntity2.getName())
+                .champion(championEntity.getEname())
+                .spell1(spellEntity1)
+                .spell2(spellEntity2)
                 .item0(gameItem.get("item0"))
                 .item1(gameItem.get("item1"))
                 .item2(gameItem.get("item2"))
@@ -131,6 +152,13 @@ public class GameEntity {
                 .kill(game.getStats().getChampionsKilled())
                 .death(game.getStats().getNumDeaths())
                 .assist(game.getStats().getAssists())
+                .cs(game.getStats().getMinionsKilled())
+                .pink(game.getStats().getVisionWardsBought())
+                .cs(game.getStats().getMinionsKilled()+game.getStats().getNeutralMinionsKilled())
+                .playtime(time)
+                .level(game.getStats().getLevel())
+                .durationTime(playtime)
+                .rekill(re)
                 .build();
     }
 

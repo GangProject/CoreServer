@@ -32,7 +32,7 @@ public class RuneController {
         }
     }
     @GetMapping("/id")
-    public HashMap rune(@RequestParam(value = "id") String id) throws Exception{
+    public HashMap rune(@RequestParam(value = "summonername") String id) throws Exception{
         try{
             return runeService.Rune_summer(id);
         }catch (Exception e){

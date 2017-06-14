@@ -27,10 +27,14 @@ public class SpellEntity {
     @Column(name = "name")
     private String name;
 
-    public static SpellEntity of(SummonerSpell SummonerSpell){
+    @Column(name = "ename")
+    private String ename;
+
+    public static SpellEntity of(SummonerSpell SummonerSpell,String ename){
         return builder()
                 .name(SummonerSpell.getName())
                 .spellid(SummonerSpell.getId())
+                .ename(ename)
                 .build();
 
     }

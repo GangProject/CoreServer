@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -71,6 +72,13 @@ public class GameService {
     private TopRepository topRepository;
 
 
+    public Iterator exam(String name) throws Exception{
+        long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
+        RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
+        Iterator<Game> iterator = game.getGames().iterator();
+        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,iterator.next().getGameId());
+        return iterator;
+    }
     public List<ResposeGame> gameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
         RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
@@ -79,11 +87,11 @@ public class GameService {
         Game r=iterator.next();
         String gameMdde;
         recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
-        if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
+        if(r.getCreateDate()==Long.parseLong(recent_list.get(0).getGameEntity().getCreateDate())){
             return recent_list;
         }else{
             while (iterator.hasNext()){
-                    if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
+                    if(r.getCreateDate()==Long.parseLong(recent_list.get(0).getGameEntity().getCreateDate())){
                         break;
                     }else {
                         game_line(r, id, r.getStats().isWin());
@@ -92,7 +100,7 @@ public class GameService {
                         SpellEntity spell2 = spellRepository.findBySpellid(r.getSpell2());
                         HashMap<String, String> itemName = itemName(r);
                         String k = timeChange(r);
-                        player(r, name);
+                        player(r, name,id);
                         if(r.getSubType().equals("RANKED_SOLO_5x5")){
                             gameMdde="솔랭";
                         }else if(r.getSubType().equals("RANKED_FLEX_SR")){
@@ -102,7 +110,9 @@ public class GameService {
                         }else{
                             gameMdde="일반";
                         }
-                        gameEntityRepository.save(GameEntity.of(gameMdde,r, k, id, champ_id, spell1, spell2, itemName));
+                        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,r.getGameId());
+
+                        //gameEntityRepository.save(GameEntity.of(gameMdde,r, k, id, champ_id, spell1, spell2, itemName));
                     }
                     r=iterator.next();
             }
@@ -121,7 +131,10 @@ public class GameService {
             System.out.println("처음");
             RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
             Iterator<Game> iterator = game.getGames().iterator();
+            long start = System.currentTimeMillis();
             iteratorGame(iterator,name,id);
+            long end = System.currentTimeMillis();
+            System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
             recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
             return recent_list;
         }else{
@@ -137,79 +150,93 @@ public class GameService {
         if(g.getStats().getItem0()==0){
             h.put("item0","null");
         }else if(g.getStats().getItem0()!=0){
-            h.put("item0",itemEntityRepository.findByItemid(g.getStats().getItem0()).getName());
+            String item=String.valueOf(g.getStats().getItem0());
+            h.put("item0",item);
         }
         if(g.getStats().getItem1()==0){
             h.put("item1","null");
         }else if(g.getStats().getItem1()!=0){
-            h.put("item1",itemEntityRepository.findByItemid(g.getStats().getItem1()).getName());
+            String item=String.valueOf(g.getStats().getItem1());
+            h.put("item1",item);
         }
         if(g.getStats().getItem2()==0){
             h.put("item2","null");
         }else if(g.getStats().getItem2()!=0){
-            h.put("item2",itemEntityRepository.findByItemid(g.getStats().getItem2()).getName());
+            String item=String.valueOf(g.getStats().getItem2());
+            h.put("item2",item);
         }
         if(g.getStats().getItem3()==0){
             h.put("item3","null");
         }else if(g.getStats().getItem3()!=0){
-            h.put("item3",itemEntityRepository.findByItemid(g.getStats().getItem3()).getName());
+            String item=String.valueOf(g.getStats().getItem3());
+            h.put("item3",item);
         }
         if(g.getStats().getItem4()==0){
             h.put("item4","null");
         }else if(g.getStats().getItem4()!=0){
-            h.put("item4",itemEntityRepository.findByItemid(g.getStats().getItem4()).getName());
+            String item=String.valueOf(g.getStats().getItem4());
+            h.put("item4",item);
         }
         if(g.getStats().getItem5()==0){
             h.put("item5","null");
         }else if(g.getStats().getItem5()!=0){
-            h.put("item5",itemEntityRepository.findByItemid(g.getStats().getItem5()).getName());
+            String item=String.valueOf(g.getStats().getItem5());
+            h.put("item5",item);
         }
         if(g.getStats().getItem6()==0){
             h.put("item6","null");
         }else if(g.getStats().getItem6()!=0) {
-            h.put("item6", itemEntityRepository.findByItemid(g.getStats().getItem6()).getName());
+            String item=String.valueOf(g.getStats().getItem6());
+            h.put("item6", item);
         }
         return h;
     }
     public String timeChange(Game game){
         Long l = game.getCreateDate();
         Date date = new Date(l); // 'epoch' in long
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
         String dateString =formatter.format(date);
-        String now=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString();
+        String now=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM")).toString();
         long time=0;
         String t;
         if(!dateString.equals(now)){
             time = Integer.parseInt(now)-Integer.parseInt(dateString);
-            t=time+"일전";
+            t=time+"달전";
             return t;
         }else{
-            formatter = new SimpleDateFormat("yyyyMMddHH");
+            formatter = new SimpleDateFormat("yyyyMMdd");
              dateString = formatter.format(date);
-             now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH")).toString();
+             now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString();
             if(dateString.equals(now)){
-                formatter = new SimpleDateFormat("yyyyMMddHHmm");
+                formatter = new SimpleDateFormat("yyyyMMddHH");
                 dateString = formatter.format(date);
-                now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")).toString();
+                now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH")).toString();
                 time = Long.parseLong(now)-Long.parseLong(dateString);
-                t=time+"분전";
+                t=time+"시간전";
+                if(dateString.equals(now)){
+                    formatter = new SimpleDateFormat("yyyyMMddHHmm");
+                    dateString = formatter.format(date);
+                    now =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHH")).toString();
+                    time = Long.parseLong(now)-Long.parseLong(dateString);
+                    t=time+"분전";
+                }
             }else {
                 time = Integer.parseInt(now) - Integer.parseInt(dateString);
-                t = time + "시간전";
+                t = time + "일전";
             }
             return t;
         }
     }
     //함께 게임한 사용자들 정리
-    public void player(Game game,String name) throws Exception{
+    public void player(Game game,String name,long id) throws Exception{
         Iterator<Player> plist = game.getFellowPlayers().iterator();
         List<PlayerEntity> red = new ArrayList<>();
         List<PlayerEntity> blue = new ArrayList<>();
         List<PlayerEntity> list = new ArrayList<>();
         if(game.getTeamId()==100){
-            blue.add(PlayerEntity.ofMy(game,name,summonerApiManager.getSummonerByName(Region.KR,name).getId()));
+            blue.add(PlayerEntity.ofMy(game,name,id));
         }else{
-            red.add(PlayerEntity.ofMy(game,name,summonerApiManager.getSummonerByName(Region.KR,name).getId()));
+            red.add(PlayerEntity.ofMy(game,name,id));
         }
         while(plist.hasNext()){
             Player p = plist.next();
@@ -230,7 +257,7 @@ public class GameService {
             }
         }
         list.addAll(blue);
-        list.addAll(red);;
+        list.addAll(red);
         playerEntityRepository.save(list);
     }
 
@@ -262,7 +289,7 @@ public class GameService {
             SpellEntity spell2 = spellRepository.findBySpellid(g.getSpell2());
             HashMap<String, String> itemName = itemName(g);
             String k = timeChange(g);
-            player(g, name);
+            player(g, name,id);
             String gameMode=null;
             if(g.getSubType().equals("RANKED_SOLO_5x5")){
                 gameMode="솔랭";
@@ -276,8 +303,8 @@ public class GameService {
             if(g.getSubType().equals("NORMAL")){
                 gameMode="일반";
             }
-            System.out.println(gameMode+"sek"+g.getChampionId());
-            gameEntityRepository.save(GameEntity.of(gameMode,g, k, id, champ_id, spell1, spell2, itemName));
+            MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,g.getGameId());
+            gameEntityRepository.save(GameEntity.of(kill(g),TimeDuration(m),CreateTime(g.getCreateDate()),gameMode,g, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
         }
     }
 
@@ -380,8 +407,8 @@ public class GameService {
    }
     public HashMap<String,String> spell(Participant p){
        HashMap<String,String> spell = new HashMap<>();
-       spell.put("spell1",spellRepository.findBySpellid(p.getSpell1Id()).getName());
-       spell.put("spell2",spellRepository.findBySpellid(p.getSpell2Id()).getName());
+       spell.put("spell1",spellRepository.findBySpellid(p.getSpell1Id()).getEname());
+       spell.put("spell2",spellRepository.findBySpellid(p.getSpell2Id()).getEname());
        return spell;
     }
     public void game_line(Game game,long id,boolean win) throws  Exception{
@@ -538,6 +565,45 @@ public class GameService {
 
 
         return list;
+    }
+
+    public String TimeDuration(MatchDetail m){
+        String t = String.valueOf(Duration.ofMinutes(m.getMatchDuration()));
+        String time = t.replaceAll("[^0-9]","");
+        String ss =time.substring(time.length()-2,time.length())+"초";
+        String mm = time.substring(0,time.length()-2)+"분";
+        String duration = mm+ss;
+        return duration;
+    }
+
+    public String CreateTime(long l){
+        Date d = new Date(l);
+        SimpleDateFormat s = new SimpleDateFormat("yyyyMMdd HH:mm");
+        String k =s.format(d);
+        return k;
+    }
+
+    public String kill(Game game){
+        int doublekill = game.getStats().getDoubleKills();
+        int triple = game.getStats().getTripleKills();
+        int quadra = game.getStats().getQuadraKills();
+        int penta = game.getStats().getPentaKills();
+        String kill=null;
+        if(penta>0){
+            return   kill="펜타킬";
+        }
+        else if(quadra>0){
+            return  kill="쿼드라킬";
+        }
+        else if(triple>0){
+            return  kill="트리플킬";
+        }
+        else if(doublekill>0){
+           return  kill="더블킬";
+        }else{
+            return null;
+        }
+
     }
 
 

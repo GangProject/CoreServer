@@ -26,7 +26,8 @@ create table core.SummonerEntity(
 create table core.SpellEntity(
    `id` int Not Null auto_increment primary Key,
     `spellId` long Not Null,
-    `name` varchar(50) Not Null
+    `name` varchar(50) Not Null,
+    `ename` VARCHAR(100) Not null
 );
 
 create table core.RuneEntity(
@@ -71,7 +72,13 @@ create table core.GameEntity(
     `gameDeath` int Not Null,
     `gameAssist` int Not Null,
     `gamedate` long Not Null,
-    `win` BOOLEAN Not Null
+    `win` BOOLEAN Not Null,
+    `cs` int NOT NULL,
+    `pinkward` int Not null,
+    `playtime` VARCHAR(100),
+    `level` int Not NULL,
+    `durationTime` VARCHAR (100) Not null,
+    `recordeKill` VARCHAR (100)
 );
 
 create table core.RankedStatusEntity(
