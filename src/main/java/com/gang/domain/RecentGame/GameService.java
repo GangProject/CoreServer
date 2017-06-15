@@ -11,6 +11,8 @@ import com.gang.domain.Player.PlayerEntity;
 import com.gang.domain.Player.PlayerEntityRepository;
 import com.gang.domain.Spell.SpellEntity;
 import com.gang.domain.Spell.SpellRepository;
+import com.gang.domain.summoner.SummonerEntity;
+import com.gang.domain.summoner.SummonerRepository;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Game.Game;
 import net.rithms.riot.dto.Game.Player;
@@ -20,6 +22,7 @@ import net.rithms.riot.dto.Match.MatchDetail;
 import net.rithms.riot.dto.Match.Participant;
 import net.rithms.riot.dto.Match.ParticipantIdentity;
 import net.rithms.riot.dto.Match.Team;
+import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,13 +74,14 @@ public class GameService {
     @Autowired
     private TopRepository topRepository;
 
-
-    public Iterator exam(String name) throws Exception{
+    @Autowired
+    private SummonerRepository summonerRepository;
+    public MatchDetail exam(String name) throws Exception{
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
         RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
         Iterator<Game> iterator = game.getGames().iterator();
-        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,iterator.next().getGameId());
-        return iterator;
+        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,2846412620L);
+        return s;
     }
     public List<ResposeGame> gameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
@@ -239,21 +243,39 @@ public class GameService {
             red.add(PlayerEntity.ofMy(game,name,id));
         }
         while(plist.hasNext()){
+
             Player p = plist.next();
-            String k = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId()).getName();
+            //String k = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId()).getName();
+            SummonerEntity s=summonerRepository.findBySummonerId((int)p.getSummonerId());
+            String k=null;
+            if(s==null){
+                Summoner summoner = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId());
+                summonerRepository.save(SummonerEntity.of(summoner));
+                k = summoner.getName();
+            }else{
+                k=s.getName();
+            }
+
+
             //100blue
             if(game.getTeamId()==100){
+                String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
                 if(game.getTeamId()==p.getTeamId()){
-                    blue.add(PlayerEntity.of(game,p,k));
+
+                    blue.add(PlayerEntity.of(game,p,k,champName));
                 }else{
-                    red.add(PlayerEntity.of(game,p,k));
+
+                    red.add(PlayerEntity.of(game,p,k,champName));
                 }
             }else{
                 if(game.getTeamId()==p.getTeamId()){
-                    red.add(PlayerEntity.of(game,p,k));
+                    String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
+                    red.add(PlayerEntity.of(game,p,k,champName));
                 }else{
-                    blue.add(PlayerEntity.of(game,p,k));
+                    String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
+                    blue.add(PlayerEntity.of(game,p,k,champName));
                 }
+
             }
         }
         list.addAll(blue);

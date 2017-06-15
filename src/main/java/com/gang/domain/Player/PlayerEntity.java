@@ -37,18 +37,22 @@ public class PlayerEntity{
     @Column(name = "playerId")
     private long playerid;
 
+    @Column(name="championName")
+    private String champname;
+
     @Column(name="playerName")
     private String playername;
 
 
 
-    public static PlayerEntity of(Game g, Player p,String name){
+    public static PlayerEntity of(Game g, Player p,String name,String ch){
         return builder()
                 .gameid(g.getGameId())
                 .championid(p.getChampionId())
                 .playerid(p.getSummonerId())
                 .teamid(p.getTeamId())
                 .playername(name)
+                .champname(ch)
                 .build();
     }
     public static PlayerEntity ofMy(Game g,String name,long id){

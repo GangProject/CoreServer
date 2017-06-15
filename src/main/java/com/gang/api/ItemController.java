@@ -47,13 +47,13 @@ public class ItemController {
 
     @ApiOperation(value = " 확인", notes = "확인용 필요없는거")
     @GetMapping(value = "/glist")
-    public Iterator glist(@RequestParam(name = "name") String name) throws Exception{
+    public MatchDetail glist(@RequestParam(name = "name") String name) throws Exception{
         try{
             long start = System.currentTimeMillis();
             summonerApiManager.getSummonerByName(Region.KR,"류종하");
 
             long end = System.currentTimeMillis();
-            Iterator<Game> l = gameService.exam(name);
+            MatchDetail l = gameService.exam(name);
             System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
             return l;
         }catch (Exception e){
