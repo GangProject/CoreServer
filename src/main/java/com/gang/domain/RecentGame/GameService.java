@@ -81,7 +81,7 @@ public class GameService {
         RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
         Iterator<Game> iterator = game.getGames().iterator();
         MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,2846412620L);
-        return s;
+        return m;
     }
     public List<ResposeGame> gameList(String name) throws Exception {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
