@@ -32,7 +32,11 @@ public class SummonerApiManager extends RiotApiManager {
                 changeKey();
                 Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
-                System.out.println(e);
+                if(e.getMessage().equals("Requested data not found")){
+                    summoner=null;
+                    return summoner;
+                }
+                System.out.println(e.getMessage());
                 changeKey();
                 Thread.sleep(1000);
             }

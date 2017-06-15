@@ -94,6 +94,7 @@ create table core.PlayerEntity(
     `championId` int Not Null,
     `playerId` long Not Null,
     `playerName` varchar(50) Not Null
+    ,`championName` VARCHAR(100) NOT NULL
 
 );
 

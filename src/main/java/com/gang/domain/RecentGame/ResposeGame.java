@@ -17,12 +17,21 @@ import java.util.List;
 public class ResposeGame {
    private GameEntity gameEntity;
    private List<PlayerEntity> playerEntity;
-
+   private String success;
    public static ResposeGame of(GameEntity g,List<PlayerEntity> p){
        return builder()
                .gameEntity(g)
                .playerEntity(p)
+               .success("성공")
                .build();
    }
+
+    public static ResposeGame ofF(GameEntity g,List<PlayerEntity> p){
+        return builder()
+                .gameEntity(null)
+                .playerEntity(null)
+                .success("소환사를 찾을수 없습니다.")
+                .build();
+    }
 
 }

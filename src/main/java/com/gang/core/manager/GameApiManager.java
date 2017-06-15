@@ -1,6 +1,7 @@
 package com.gang.core.manager;
 
 import com.gang.core.RiotApiManager;
+import javassist.NotFoundException;
 import net.rithms.riot.api.RateLimitException;
 import net.rithms.riot.api.RiotApiException;
 import net.rithms.riot.constant.Region;
@@ -32,7 +33,8 @@ public class GameApiManager extends RiotApiManager {
                 changeKey();
                 Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
-                System.out.println(e);
+
+                System.out.println(e.getMessage());
                 changeKey();
                 Thread.sleep(1000);
             }

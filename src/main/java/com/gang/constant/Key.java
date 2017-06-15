@@ -8,6 +8,7 @@ import net.rithms.riot.api.RiotStringNotFound;
  */
 public enum Key {
     KEYONE(4,"RGAPI-ee2bd3aa-238e-409c-88db-24a3b745773"),
+    KEYSIX(5,"RGAPI-545beb9f-67a8-472e-a7f2-ed4dae63d479 "),
     KEYTWO(3,"RGAPI-342e18e7-3f6f-42ca-8eaf-063956bd50ad"),
     KEYTHREE(2,"RGAPI-3a7ff858-0698-4186-8093-708a986da6dc"),
     KEYFOUR(1,"RGAPI-43d14c22-daa7-4869-adbf-8dc0bafe27bb"),

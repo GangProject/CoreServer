@@ -45,9 +45,14 @@ public class GamePlayer {
     private long gold;
     private long cs;
     private String tier;
+    private long pinkward;
+    private long level;
+    private double kdaPoint;
+    private long deleteward;
 
 
-    public static GamePlayer ofParty(Participant p, ParticipantIdentity p2, String name, HashMap<String,String> spell, HashMap<String,String> item
+
+    public static GamePlayer ofParty(double kda,Participant p, ParticipantIdentity p2, String name, HashMap<String,String> spell, HashMap<String,String> item
     ,String tier){
         return GamePlayer.builder()
                 .teamId(p.getTeamId())
@@ -70,7 +75,11 @@ public class GamePlayer {
                 .ward(p.getStats().getWardsPlaced())
                 .damage(p.getStats().getTotalDamageDealtToChampions())
                 .tier(tier)
-                .cs(p.getStats().getMinionsKilled())
+                .cs(p.getStats().getMinionsKilled()+p.getStats().getNeutralMinionsKilled())
+                .pinkward(p.getStats().getVisionWardsBoughtInGame())
+                .level(p.getStats().getChampLevel())
+                .kdaPoint(kda)
+                .deleteward(p.getStats().getWardsKilled())
                 .build();
     }
 

@@ -55,13 +55,14 @@ public class PlayerEntity{
                 .champname(ch)
                 .build();
     }
-    public static PlayerEntity ofMy(Game g,String name,long id){
+    public static PlayerEntity ofMy(Game g,String name,long id,String ch){
         return builder()
                 .gameid(g.getGameId())
                 .championid(g.getChampionId())
                 .playerid(id)
                 .playername(name)
                 .teamid(g.getTeamId())
+                .champname(ch)
                 .build();
     }
 }

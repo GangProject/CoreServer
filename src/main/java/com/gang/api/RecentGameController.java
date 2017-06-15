@@ -46,7 +46,11 @@ public class RecentGameController {
     public List<ResposeGame> game_refresh(@RequestParam(value = "name") String name) throws Exception{
         try {
             System.out.println("seungki_2");
-            return gameService.gameList(name);
+            long start = System.currentTimeMillis();
+            List<ResposeGame> l = gameService.gameList(name);
+            long end = System.currentTimeMillis();
+            System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+            return l;
         }catch (Exception e){
             throw e;
         }
@@ -56,7 +60,11 @@ public class RecentGameController {
     @RequestMapping(value = "/game/info",method = RequestMethod.GET)
     public Game_info gameInfo(@RequestParam(value = "gameid") long id) throws Exception{
         try {
-            return gameService.gameInfo(id);
+            long start = System.currentTimeMillis();
+            Game_info g= gameService.gameInfo(id);
+            long end = System.currentTimeMillis();
+            System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
+            return g;
         }catch (Exception e){
             throw e;
         }

@@ -80,7 +80,7 @@ public class GameService {
         long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
         RecentGames game = gameApiManager.getRecentGames(Region.KR, id);
         Iterator<Game> iterator = game.getGames().iterator();
-        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,2846412620L);
+        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,2851840574L);
         return m;
     }
     public List<ResposeGame> gameList(String name) throws Exception {
@@ -89,13 +89,13 @@ public class GameService {
         Iterator<Game> iterator = game.getGames().iterator();
         List<ResposeGame> recent_list = new ArrayList<>();
         Game r=iterator.next();
-        String gameMdde;
+        String gameMdde=null;
         recent_list = recent(gameEntityRepository.findBySummoneridOrderByDateDesc(id));
-        if(r.getCreateDate()==Long.parseLong(recent_list.get(0).getGameEntity().getCreateDate())){
+        if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
             return recent_list;
         }else{
             while (iterator.hasNext()){
-                    if(r.getCreateDate()==Long.parseLong(recent_list.get(0).getGameEntity().getCreateDate())){
+                    if(r.getCreateDate()==recent_list.get(0).getGameEntity().getDate()){
                         break;
                     }else {
                         game_line(r, id, r.getStats().isWin());
@@ -103,20 +103,28 @@ public class GameService {
                         SpellEntity spell1 = spellRepository.findBySpellid(r.getSpell1());
                         SpellEntity spell2 = spellRepository.findBySpellid(r.getSpell2());
                         HashMap<String, String> itemName = itemName(r);
+
                         String k = timeChange(r);
+
                         player(r, name,id);
+
                         if(r.getSubType().equals("RANKED_SOLO_5x5")){
                             gameMdde="솔랭";
-                        }else if(r.getSubType().equals("RANKED_FLEX_SR")){
+                        }
+                        if(r.getSubType().equals("RANKED_FLEX_SR")){
                             gameMdde="자유랭크";
-                        }else if(r.getSubType().equals("ARAM")){
+                        }
+                        if(r.getSubType().equals("ARAM_UNRANKED_5x5")){
                             gameMdde="칼바람";
-                        }else{
+                        }
+                        if(r.getSubType().equals("NORMAL")){
                             gameMdde="일반";
                         }
-                        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,r.getGameId());
-
-                        //gameEntityRepository.save(GameEntity.of(gameMdde,r, k, id, champ_id, spell1, spell2, itemName));
+                        if(r.getSubType().equals("NONE")){
+                            gameMdde="커스텀";
+                        }
+                        System.out.println("303");
+                        gameEntityRepository.save(GameEntity.of(kill(r),TimeDuration(r),CreateTime(r.getCreateDate()),gameMdde,r, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
                     }
                     r=iterator.next();
             }
@@ -128,8 +136,17 @@ public class GameService {
     }
 
     public List<ResposeGame> dbgameList(String name) throws Exception {
-        long id = summonerApiManager.getSummonerByName(Region.KR, name).getId();
+        Summoner summoner = summonerApiManager.getSummonerByName(Region.KR, name);
+        long id=0;
         List<ResposeGame> recent_list = new ArrayList<>();
+        if(summoner==null){
+            recent_list.add(ResposeGame.ofF(null,null));
+            return recent_list;
+        }else{
+            id = summoner.getId();
+        }
+
+
         List<GameEntity> list= gameEntityRepository.findBySummoneridOrderByDateDesc(id);
         if (list.size()==0) {
             System.out.println("처음");
@@ -238,9 +255,11 @@ public class GameService {
         List<PlayerEntity> blue = new ArrayList<>();
         List<PlayerEntity> list = new ArrayList<>();
         if(game.getTeamId()==100){
-            blue.add(PlayerEntity.ofMy(game,name,id));
+            String champName = championEntityRepository.findByChampid(game.getChampionId()).getEname();
+            blue.add(PlayerEntity.ofMy(game,name,id,champName));
         }else{
-            red.add(PlayerEntity.ofMy(game,name,id));
+            String champName = championEntityRepository.findByChampid(game.getChampionId()).getEname();
+            red.add(PlayerEntity.ofMy(game,name,id,champName));
         }
         while(plist.hasNext()){
 
@@ -319,14 +338,17 @@ public class GameService {
             if(g.getSubType().equals("RANKED_FLEX_SR")){
                 gameMode="자유랭크";
             }
-            if(g.getSubType().equals("ARAM")){
+            if(g.getSubType().equals("ARAM_UNRANKED_5x5")){
                 gameMode="칼바람";
             }
             if(g.getSubType().equals("NORMAL")){
                 gameMode="일반";
             }
-            MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,g.getGameId());
-            gameEntityRepository.save(GameEntity.of(kill(g),TimeDuration(m),CreateTime(g.getCreateDate()),gameMode,g, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
+            if(g.getSubType().equals("NONE")){
+                gameMode="커스텀";
+            }
+
+            gameEntityRepository.save(GameEntity.of(kill(g),TimeDuration(g),CreateTime(g.getCreateDate()),gameMode,g, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
         }
     }
 
@@ -346,7 +368,12 @@ public class GameService {
             String summerid=String.valueOf(partici.getPlayer().getSummonerId());
             List<League> league = leagueApiManager.getLeagueEntryBySummoner(Region.KR,summerid);
             String tier=league.get(0).getTier()+league.get(0).getEntries().iterator().next().getDivision();
-            GamePlayer game=GamePlayer.ofParty(part,partici,championEntityRepository.findByChampid(part.getChampionId()).getName(),spell(part),itemPlayer(part),tier);
+            double kill=part.getStats().getKills();
+            double death = part.getStats().getDeaths();
+            double assist = part.getStats().getAssists();
+            double kda = (kill+assist)/death;
+
+            GamePlayer game=GamePlayer.ofParty(kda,part,partici,championEntityRepository.findByChampid(part.getChampionId()).getEname(),spell(part),itemPlayer(part),tier);
 
             if(game.getTeamId()==100){
                 blue.add(game);
@@ -369,8 +396,11 @@ public class GameService {
             while (team1.hasNext()){
                 Team t = team1.next();
                 if (t.getTeamId()==100){
+                    System.out.println(t.getBaronKills()+" "+t.getDragonKills()+" "+t.getTowerKills());
                     gameInfos.add(GameInfo.of(blue,true,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
-                }else{
+                }
+                else{
+                    System.out.println(t.getBaronKills()+" "+t.getDragonKills()+" "+t.getTowerKills());
                     gameInfos.add(GameInfo.of(red,false,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
                 }
             }
@@ -378,9 +408,11 @@ public class GameService {
             while (team1.hasNext()){
                 Team t = team1.next();
                 if (t.getTeamId()==200){
-                    gameInfos.add(GameInfo.of(blue,false,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
-                }else{
+                    System.out.println(t.getBaronKills()+" "+t.getDragonKills()+" "+t.getTowerKills());
                     gameInfos.add(GameInfo.of(red,true,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
+                }else{
+                    System.out.println(t.getBaronKills()+" "+t.getDragonKills()+" "+t.getTowerKills());
+                    gameInfos.add(GameInfo.of(blue,false,t.getDragonKills(),t.getTowerKills(),t.getBaronKills()));
                 }
             }
         }
@@ -393,37 +425,37 @@ public class GameService {
        if(p.getStats().getItem0()==0){
            h.put("Item0",null);
        }else{
-           h.put("Item0",itemEntityRepository.findByItemid((int)p.getStats().getItem0()).getName());
+           h.put("Item0",String.valueOf(p.getStats().getItem0()));
        }
        if(p.getStats().getItem1()==0){
            h.put("Item1",null);
        }else{
-           h.put("Item1",itemEntityRepository.findByItemid((int)p.getStats().getItem1()).getName());
+           h.put("Item1",String.valueOf(p.getStats().getItem1()));
        }
        if(p.getStats().getItem2()==0){
            h.put("Item2",null);
        }else{
-           h.put("Item2",itemEntityRepository.findByItemid((int)p.getStats().getItem2()).getName());
+           h.put("Item2",String.valueOf(p.getStats().getItem2()));
        }
        if(p.getStats().getItem3()==0){
            h.put("Item3",null);
        }else{
-           h.put("Item3",itemEntityRepository.findByItemid((int)p.getStats().getItem3()).getName());
+           h.put("Item3",String.valueOf(p.getStats().getItem3()));
        }
        if(p.getStats().getItem4()==0){
            h.put("Item4",null);
        }else{
-           h.put("Item4",itemEntityRepository.findByItemid((int)p.getStats().getItem4()).getName());
+           h.put("Item4",String.valueOf(p.getStats().getItem4()));
        }
        if(p.getStats().getItem5()==0){
            h.put("Item5",null);
        }else{
-           h.put("Item5",itemEntityRepository.findByItemid((int)p.getStats().getItem5()).getName());
+           h.put("Item5",String.valueOf(p.getStats().getItem5()));
        }
        if(p.getStats().getItem6()==0){
            h.put("Item6",null);
        }else{
-           h.put("Item6",itemEntityRepository.findByItemid((int)p.getStats().getItem6()).getName());
+           h.put("Item6",String.valueOf(p.getStats().getItem6()));
        }
        return h;
    }
@@ -508,7 +540,7 @@ public class GameService {
                 }
             }
         }
-        if(line.equals("JUNGGLE")){
+        if(line.equals("JUNGLE")){
             Junggle junggle = junggleRepository.findByplayerid(id);
             if(check(junggle)){
                 junggle.setTotalGame(junggle.getTotalGame()+1);
@@ -589,8 +621,8 @@ public class GameService {
         return list;
     }
 
-    public String TimeDuration(MatchDetail m){
-        String t = String.valueOf(Duration.ofMinutes(m.getMatchDuration()));
+    public String TimeDuration(Game m){
+        String t = String.valueOf(Duration.ofMinutes(m.getStats().getTimePlayed()));
         String time = t.replaceAll("[^0-9]","");
         String ss =time.substring(time.length()-2,time.length())+"초";
         String mm = time.substring(0,time.length()-2)+"분";

@@ -3,6 +3,7 @@ package com.gang.api;
 import com.gang.domain.Rune.RuneEntity;
 import com.gang.domain.Rune.RuneService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class RuneController {
     private RuneService runeService;
 
     @GetMapping("/info")
+    @ApiOperation(value = "롤 룬다가져오기",notes = "룬")
     public List<RuneEntity> rune() throws Exception{
         try{
             return runeService.getRune();
@@ -31,10 +33,16 @@ public class RuneController {
             throw e;
         }
     }
-    @GetMapping("/id")
+    @GetMapping("/summonerName")
+    @ApiOperation(value = "소환사가 가지고 있는 룬정보",notes = "룬정보")
     public HashMap rune(@RequestParam(value = "summonername") String id) throws Exception{
         try{
-            return runeService.Rune_summer(id);
+            HashMap h =runeService.Rune_summer(id);
+            if(h==null){
+                h.put("null","소환사를 찾을수 없습니다.");
+                return h;
+            }
+            return h;
         }catch (Exception e){
             throw e;
         }
