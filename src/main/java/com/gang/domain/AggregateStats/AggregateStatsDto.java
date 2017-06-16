@@ -47,6 +47,16 @@ public class AggregateStatsDto implements Comparable<AggregateStatsDto>{
         double avgGoldEarned = (double)ase.getTotalGoldEarned()/ase.getTotalSessionPlayed();
         double avgDamageDealt = (double)ase.getTotalDamageDealt()/ase.getTotalSessionPlayed();
 
+        kda = Double.parseDouble(String.format("%.2f",kda));
+        winningRate = Double.parseDouble(String.format("%.2f",winningRate));
+        avgKill = Double.parseDouble(String.format("%.2f",avgKill));
+        avgDeath = Double.parseDouble(String.format("%.2f",avgDeath));
+        avgAssist = Double.parseDouble(String.format("%.2f",avgAssist));
+        avgCs = Double.parseDouble(String.format("%.2f",avgCs));
+
+        avgGoldEarned = Double.parseDouble(String.format("%.2f",avgGoldEarned));
+        avgDamageDealt = Double.parseDouble(String.format("%.2f",avgDamageDealt));
+
         return AggregateStatsDto.builder()
                 .id(id)
                 .name(name)

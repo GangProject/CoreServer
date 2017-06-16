@@ -58,6 +58,10 @@ public class ResultEntity implements Dto{
         double losses = league.getEntries().get(0).getLosses();
         double winningRate = (wins/(wins+losses))*100;
 
+        wins = Double.parseDouble(String.format("%.2f",wins));
+        losses = Double.parseDouble(String.format("%.2f",losses));
+        winningRate = Double.parseDouble(String.format("%.2f",winningRate));
+
         return ResultEntity.builder()
                 .summonerId(summonerEntity.getSummonerId())
                 .name(summonerEntity.getName())
