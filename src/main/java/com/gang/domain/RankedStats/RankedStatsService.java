@@ -87,7 +87,7 @@ public class RankedStatsService {
             int played = aggregateStatsDto.getPlayed();
             double winningRate = aggregateStatsDto.getWinningRate();
             System.out.println(mmr);
-            mmr = analyzeUtil.analyzeMmr(mmr,winningRate,played);
+            mmr = analyzeUtil.analyzeMmr(aggregateStatsDto.getKda(),mmr,winningRate,played);
             String analyzeTier = Tier.getTierNameByMmr(mmr);
             aggregateStatsDto.setTier(analyzeTier);
             System.out.println(mmr);

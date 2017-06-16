@@ -45,7 +45,7 @@ public class AnalyzeUtil {
        30% > -400
        ... 같게 적용(-400)
      */
-    public int analyzeMmr(int mmr,double winningRate,int played){
+    public int analyzeMmr(double kda, int mmr,double winningRate,int played){
         if(played<10) return mmr; //10게임 미만이면 그냥 반환.
 
         if(winningRate>=70){
@@ -122,6 +122,72 @@ public class AnalyzeUtil {
             mmr = mmr - 300;
         }else{
             mmr = mmr-400;
+        }
+
+        if(kda>=4.5){
+            mmr = mmr + 103;
+        }else if(kda>=4.4){
+            mmr = mmr + 95;
+        }else if(kda>=4.3){
+            mmr = mmr + 90;
+        }else if(kda>=4.2){
+            mmr = mmr +85;
+        }else if(kda>=4.1){
+            mmr = mmr + 83;
+        }else if(kda>=4.0){
+            mmr = mmr + 77;
+        }else if(kda>=3.9){
+            mmr = mmr + 74;
+        }else if(kda>=3.8){
+            mmr = mmr + 72;
+        }else if(kda>=3.7){
+            mmr = mmr + 65;
+        }else if(kda>=3.6){
+            mmr = mmr + 63;
+        }else if(kda>=3.5){
+            mmr = mmr + 58;
+        }else if(kda>=3.4){
+            mmr = mmr + 52;
+        }else if(kda>=3.3){
+            mmr = mmr + 47;
+        }else if(kda>=3.2){
+            mmr = mmr + 41;
+        }else if(kda>=3.1){
+            mmr = mmr + 36;
+        }else if(kda>=3.0){
+            mmr = mmr + 31;
+        }else if(kda>=2.9){
+            mmr = mmr + 26;
+        }else if(kda>=2.8){
+            mmr = mmr + 21;
+        }else if(kda>=2.7){
+            mmr = mmr + 16;
+        }else if(kda>=2.6){
+            mmr = mmr + 8;
+        }else if(kda>=2.5){
+
+        }else if(kda>=2.4){
+            mmr = mmr - 8;
+        }else if(kda>=2.3){
+            mmr = mmr - 16;
+        }else if(kda>=2.2){
+            mmr = mmr - 21;
+        }else if(kda>=2.1){
+            mmr = mmr - 26;
+        }else if(kda>=2.0){
+            mmr = mmr - 33;
+        }else if(kda>=1.9){
+            mmr = mmr - 41;
+        }else if(kda>=1.8){
+            mmr = mmr - 48;
+        }else if(kda>=1.7){
+            mmr = mmr - 57;
+        }else if(kda>=1.6){
+            mmr = mmr - 75;
+        }else if(kda>=1.5){
+            mmr = mmr - 83;
+        }else{
+            mmr = mmr - 103;
         }
 
         return mmr;

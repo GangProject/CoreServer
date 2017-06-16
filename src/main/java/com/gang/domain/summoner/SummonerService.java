@@ -80,7 +80,7 @@ public class SummonerService {
             myTierEng = myTemp2[0];
             myDivision = myTemp[1];
 
-            analyzeMmr = analyzeUtil.analyzeMmr(myMmr,resultEntity.getWiningRate(),resultEntity.getWins()+resultEntity.getLosses());
+            analyzeMmr = analyzeUtil.analyzeMmr(2.5,myMmr,resultEntity.getWiningRate(),resultEntity.getWins()+resultEntity.getLosses());
             String temp[] = Tier.getTierNameByMmr(analyzeMmr).split(" ");
             String temp2[] = Tier.getTierNameEngMmr(analyzeMmr).split(" ");
             predictTierKor = temp[0];
