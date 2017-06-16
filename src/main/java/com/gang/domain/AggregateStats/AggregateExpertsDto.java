@@ -14,6 +14,8 @@ public class AggregateExpertsDto implements Comparable<AggregateExpertsDto>{
     private int id;
     private String name;
     private double kda;
+    private int win;
+    private int lost;
     private double winningRate;
     private double avgKill;
     private double avgDeath;
@@ -33,6 +35,8 @@ public class AggregateExpertsDto implements Comparable<AggregateExpertsDto>{
                 .id(id)
                 .name(name)
                 .kda(kda)
+                .win(ase.getTotalSessionWon())
+                .lost(ase.getTotalSessionsLost())
                 .winningRate(winningRate)
                 .avgKill(avgKill)
                 .avgDeath(avgDeath)
