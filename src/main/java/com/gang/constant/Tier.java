@@ -6,31 +6,31 @@ package com.gang.constant;
 public enum Tier {
     C("챌린저","Challenger",2700),
     M("마스터","Master",2500),
-    D1("다이아몬드1","DiamondI",2450),
-    D2("다이아몬드2","DiamondII",2400),
-    D3("다이아몬드3","DiamondIII",2350),
-    D4("다이아몬드4","DiamondIV",2300),
-    D5("다이아몬드5","DiamondV",2200),
-    P1("플레티넘1","PlatinumI",2100),
-    P2("플레티넘2","PlatinumII",2050),
-    P3("플레티넘3","PlatinumIII",2000),
-    P4("플레티넘4","PlatinumIV",1950),
-    P5("플레티넘5","PlatinumV",1850),
-    G1("골드1","GoldI",1750),
-    G2("골드2","GoldII",1700),
-    G3("골드3","GoldIII",1650),
-    G4("골드4","GoldIV",1600),
-    G5("골드5","GoldV",1500),
-    S1("실버1","SilverI",1400),
-    S2("실버2","SilverII",1350),
-    S3("실버3","SilverIII",1300),
-    S4("실버4","SilverIV",1250),
-    S5("실버5","SilverV",1150),
-    B1("브론즈1","BronzeI",1050),
-    B2("브론즈2","BronzeII",1000),
-    B3("브론즈3","BronzeIII",950),
-    B4("브론즈4","BronzeIV",900),
-    B5("브론즈5","BronzeV",800);
+    D1("다이아몬드 1","Diamond I",2450),
+    D2("다이아몬드 2","Diamond II",2400),
+    D3("다이아몬드 3","Diamond III",2350),
+    D4("다이아몬드 4","Diamond IV",2300),
+    D5("다이아몬드 5","Diamond V",2200),
+    P1("플레티넘 1","Platinum I",2100),
+    P2("플레티넘 2","Platinum II",2050),
+    P3("플레티넘 3","Platinum III",2000),
+    P4("플레티넘 4","Platinum IV",1950),
+    P5("플레티넘 5","Platinum V",1850),
+    G1("골드 1","Gold I",1750),
+    G2("골드 2","Gold II",1700),
+    G3("골드 3","Gold III",1650),
+    G4("골드 4","Gold IV",1600),
+    G5("골드 5","Gold V",1500),
+    S1("실버 1","Silver I",1400),
+    S2("실버 2","Silver II",1350),
+    S3("실버 3","Silver III",1300),
+    S4("실버 4","Silver IV",1250),
+    S5("실버 5","Silver V",1150),
+    B1("브론즈 1","Bronze I",1050),
+    B2("브론즈 2","Bronze II",1000),
+    B3("브론즈 3","Bronze III",950),
+    B4("브론즈 4","Bronze IV",900),
+    B5("브론즈 5","Bronze V",800);
 
     private String tierName;
     private String tierNameEng;
@@ -50,14 +50,27 @@ public enum Tier {
                 return t.getTierName();
             }
         }
-        return "브론즈5";
+        return "브론즈 5";
     }
+
+    /*
+     * mmr 에 따른 tier 영어명 반환
+     */
+    public static String getTierNameEngMmr(int mmr){
+        for(Tier t : Tier.values()){
+            if(t.getMmr()<=mmr){
+                return t.getTierNameEng();
+            }
+        }
+        return "Bronze 5";
+    }
+
 
     /*
      * tier , division과 일치하는 mmr 반환.
      */
     public static int getMmrByTier(String tier,String division){
-        String fullTierName = tier+division;
+        String fullTierName = tier+" "+division;
 
         System.out.println(fullTierName);
 

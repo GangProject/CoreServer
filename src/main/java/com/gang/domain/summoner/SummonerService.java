@@ -59,18 +59,34 @@ public class SummonerService {
 
     public ResponseDto mmr(String name) throws StringNotFoundException, InterruptedException{
         MmrDto mmrDto = null;
-        int mmr = 0;
-        int analyzeMmr;
-        String tier = null;
+        int myMmr = 0;
+        String myTierKor = null;
+        String myTierEng = null;
+        String myDivision = null;
+
+        int analyzeMmr = 0;
+        String predictTierKor = null;
+        String predictTierEng = null;
+        String predictDivision = null;
         ResultEntity resultEntity = null;
 
         List<ResultEntity> list = infoSummoner(name);
         if(list.size()>0){
             resultEntity = list.get(0);
-            mmr = Tier.getMmrByTier(resultEntity.getTier(),resultEntity.getDivision());
-            analyzeMmr = analyzeUtil.analyzeMmr(mmr,resultEntity.getWiningRate(),resultEntity.getWins()+resultEntity.getLosses());
-            tier = Tier.getTierNameByMmr(analyzeMmr);
-            mmrDto = mmrDto.of(analyzeMmr,tier);
+            myMmr = Tier.getMmrByTier(resultEntity.getTier(),resultEntity.getDivision());
+            String myTemp[] = Tier.getTierNameByMmr(myMmr).split(" ");
+            String myTemp2[] = Tier.getTierNameEngMmr(myMmr).split(" ");
+            myTierKor = myTemp[0];
+            myTierEng = myTemp2[0];
+            myDivision = myTemp[1];
+
+            analyzeMmr = analyzeUtil.analyzeMmr(myMmr,resultEntity.getWiningRate(),resultEntity.getWins()+resultEntity.getLosses());
+            String temp[] = Tier.getTierNameByMmr(analyzeMmr).split(" ");
+            String temp2[] = Tier.getTierNameEngMmr(analyzeMmr).split(" ");
+            predictTierKor = temp[0];
+            predictTierEng = temp2[0];
+            predictDivision = temp[1];
+            mmrDto = mmrDto.of(myMmr,myTierKor,myTierEng,myDivision,analyzeMmr,predictTierKor,predictTierEng,predictDivision);
         }
         return ResponseDto.ofSuccess(mmrDto,"성공");
     }

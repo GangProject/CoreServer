@@ -15,13 +15,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Setter
 @Builder
 public class MmrDto implements Dto {
-    private int mmr;
-    private String tier;
+    private int myMmr;
+    private String myTierKor;
+    private String myTierEng;
+    private String myDivision;
 
-    public static MmrDto of(int mmr, String tier) {
+    private int predictMmr;
+    private String predictTierKor;
+    private String predictTierEng;
+    private String predictDivision;
+
+    public static MmrDto of(int myMmr, String myTierKor, String myTierEng, String myDivision,
+            int predictMmr, String predictTierKor,String predictTierEng, String predictDivision) {
         return MmrDto.builder()
-                .mmr(mmr)
-                .tier(tier)
+                .myMmr(myMmr)
+                .myTierKor(myTierKor)
+                .myTierEng(myTierEng)
+                .myDivision(myDivision)
+                .predictMmr(predictMmr)
+                .predictTierKor(predictTierKor)
+                .predictTierEng(predictTierEng)
+                .predictDivision(predictDivision)
                 .build();
     }
 }
