@@ -114,6 +114,8 @@ public class GameEntity {
     @Column(name = "recordeKill")
     private String rekill;
 
+    @Column(name = "inkda")
+    private double inkda;
 
     @Transient
     private long damage;
@@ -127,9 +129,12 @@ public class GameEntity {
 
 
 
-    public static GameEntity of(String re,String playtime,String createDate,String gameMode,Game game, String time,Long id, ChampionEntity championEntity, String spellEntity1,String spellEntity2,HashMap<String,String> gameItem
+
+
+    public static GameEntity of(double kda,String re,String playtime,String createDate,String gameMode,Game game, String time,Long id, ChampionEntity championEntity, String spellEntity1,String spellEntity2,HashMap<String,String> gameItem
                                 ){
         return GameEntity.builder()
+                .inkda(kda)
                 .win(game.getStats().isWin())
                 .gameid(game.getGameId())
                 .gameMode(game.getGameMode())

@@ -80,7 +80,8 @@ create table core.GameEntity(
     `playtime` VARCHAR(100),
     `level` int Not NULL,
     `durationTime` VARCHAR (100) Not null,
-    `recordeKill` VARCHAR (100)
+    `recordeKill` VARCHAR (100),
+    `inkda` DOUBLE not NULL
 );
 
 create table core.RankedStatusEntity(

@@ -14,11 +14,13 @@ public class RuneEntityCountDto {
 
     private String name;
     private int number;
+    private String descipt;
 
-    public static RuneEntityCountDto of(String name,int number){
+    public static RuneEntityCountDto of(String name,int number,String descipt){
         return builder()
                 .name(name)
                 .number(number)
+                .descipt(descipt)
                 .build();
     }
 }

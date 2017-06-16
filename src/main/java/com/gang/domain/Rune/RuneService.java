@@ -107,13 +107,13 @@ public class RuneService {
                     Integer nu = rune.get(k1);
                     RuneEntity rn = runeEntityRepository.findByName(k1);
                     if(rn.getType().equals("red")){
-                            red.add(RuneEntityCountDto.of(k1, nu));
+                            red.add(RuneEntityCountDto.of(k1, nu,rn.getDescript()));
                     }else if(rn.getType().equals("blue")){
-                            blue.add(RuneEntityCountDto.of(k1, nu));
+                            blue.add(RuneEntityCountDto.of(k1, nu,rn.getDescript()));
                     }else if(rn.getType().equals("black")){
-                            black.add(RuneEntityCountDto.of(k1, nu));
+                            black.add(RuneEntityCountDto.of(k1, nu,rn.getDescript()));
                     }else if(rn.getType().equals("yellow")){
-                            yellow.add(RuneEntityCountDto.of(k1, nu));
+                            yellow.add(RuneEntityCountDto.of(k1, nu,rn.getDescript()));
                     }
 
                 }

@@ -124,7 +124,33 @@ public class GameService {
                             gameMdde="커스텀";
                         }
                         System.out.println("303");
-                        gameEntityRepository.save(GameEntity.of(kill(r),TimeDuration(r),CreateTime(r.getCreateDate()),gameMdde,r, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
+                        MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,r.getGameId());
+                        List<Participant> p = null;
+                        Iterator<Participant> p1 = null;
+                        int AllKill=0;
+                        if(r.getTeamId()==200) {
+                            p=m.getParticipants();
+                            p1=p.iterator();
+                            while (p1.hasNext()) {
+                                Participant p2 = p1.next();
+                                if (p2.getTeamId() == 200) {
+                                    AllKill += p2.getStats().getKills();
+                                }
+                            }
+                        }else {
+                            p = m.getParticipants();
+                            p1 = p.iterator();
+                            while (p1.hasNext()) {
+                                Participant p2 = p1.next();
+                                if (p2.getTeamId() == 100) {
+                                    AllKill += p2.getStats().getKills();
+                                }
+                            }
+                        }
+                        System.out.println((double)r.getStats().getChampionsKilled()+(double)r.getStats().getAssists()/AllKill+"내것");
+                        double inkda = (((double)r.getStats().getChampionsKilled()+(double)r.getStats().getAssists())/AllKill)*100;
+                        gameEntityRepository.save(GameEntity.of(inkda,kill(r),TimeDuration(r),CreateTime(r.getCreateDate()),gameMdde,r, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
+
                     }
                     r=iterator.next();
             }
@@ -349,8 +375,32 @@ public class GameService {
             if(g.getSubType().equals("NONE")){
                 gameMode="커스텀";
             }
-
-            gameEntityRepository.save(GameEntity.of(kill(g),TimeDuration(g),CreateTime(g.getCreateDate()),gameMode,g, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
+            MatchDetail m = gameApiManager.getRecentGamesInfo(Region.KR,g.getGameId());
+            List<Participant> p = null;
+            Iterator<Participant> p1 = null;
+            int AllKill=0;
+            if(g.getTeamId()==100) {
+                p=m.getParticipants();
+                p1=p.iterator();
+                while (p1.hasNext()) {
+                    Participant p2 = p1.next();
+                    if (p2.getTeamId() == 100) {
+                        AllKill += p2.getStats().getKills();
+                    }
+                }
+            }else {
+                p = m.getParticipants();
+                p1 = p.iterator();
+                while (p1.hasNext()) {
+                    Participant p2 = p1.next();
+                    if (p2.getTeamId() == 200) {
+                        AllKill += p2.getStats().getKills();
+                    }
+                }
+            }
+            System.out.println((double)g.getStats().getChampionsKilled()+(double)g.getStats().getAssists()/AllKill+"내것");
+            double inkda = (((double)g.getStats().getChampionsKilled()+(double)g.getStats().getAssists())/AllKill)*100;
+            gameEntityRepository.save(GameEntity.of(inkda,kill(g),TimeDuration(g),CreateTime(g.getCreateDate()),gameMode,g, k, id, champ_id, spell1.getEname(), spell2.getEname(), itemName));
         }
     }
 

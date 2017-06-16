@@ -65,22 +65,15 @@ public class ItemController {
 
     @ApiOperation(value = " 확인", notes = "확인용 필요없는거")
     @GetMapping(value = "/glist")
-    public List<RuneEntity> glist(@RequestParam(name = "name") String name) throws Exception{
+    public MatchDetail glist(@RequestParam(name = "name") String name) throws Exception{
         try{
             long start = System.currentTimeMillis();
             //MasteryPages m = masteryApiManager.masteryPages(summonerApiManager.getSummonerByName(Region.KR,name).getId());
-            RuneList l= runeApiManager.getRune();
-            Iterator<String> iterator = l.getData().keySet().iterator();
-            List<RuneEntity> r = new ArrayList<>();
-            while (iterator.hasNext()) {
-                String key = iterator.next();
-                Rune k =l.getData().get(key);
-                r.add(RuneEntity.of(k));
-            }
+            MatchDetail m =gameService.exam(name);
             long end = System.currentTimeMillis();
 
             System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-            return r;
+            return m;
         }catch (Exception e){
             throw e;
         }
