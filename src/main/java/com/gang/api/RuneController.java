@@ -1,5 +1,7 @@
 package com.gang.api;
 
+import com.gang.domain.Rune.RunEntityDto;
+import com.gang.domain.Rune.RunEntityListDto;
 import com.gang.domain.Rune.RuneEntity;
 import com.gang.domain.Rune.RuneService;
 import io.swagger.annotations.Api;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by seungki on 2017-04-28.
@@ -35,11 +38,11 @@ public class RuneController {
     }
     @GetMapping("/summonerName")
     @ApiOperation(value = "소환사가 가지고 있는 룬정보",notes = "룬정보")
-    public HashMap rune(@RequestParam(value = "summonername") String id) throws Exception{
+    public Map rune(@RequestParam(value = "summonername") String id) throws Exception{
         try{
-            HashMap h =runeService.Rune_summer(id);
+            Map h =runeService.Rune_summer(id);
             if(h==null){
-                h.put("null","소환사를 찾을수 없습니다.");
+                h.put(0,null);
                 return h;
             }
             return h;

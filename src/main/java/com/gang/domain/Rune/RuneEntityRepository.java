@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface RuneEntityRepository extends JpaRepository<RuneEntity,Integer>{
     RuneEntity findByRunid(int id);
+    RuneEntity findByName(String name);
 }

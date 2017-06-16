@@ -31,12 +31,9 @@ public class GameApiManager extends RiotApiManager {
             } catch (RateLimitException e) { //key 요청 횟수 초과시
                 System.out.println("key 바꿈");
                 changeKey();
-                Thread.sleep(1000); //1초 동안 sleep
             } catch (RiotApiException e) {
-
                 System.out.println(e.getMessage());
                 changeKey();
-                Thread.sleep(1000);
             }
         }
 
