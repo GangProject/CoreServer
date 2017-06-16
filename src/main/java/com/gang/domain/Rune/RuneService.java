@@ -12,10 +12,7 @@ import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by seungki on 2017-04-28.
@@ -31,24 +28,25 @@ public class RuneService {
 
     @Autowired
     private SummonerApiManager summonerApiManager;
-    public List<RuneEntity> getRune() throws Exception{
+
+    public List<RuneEntity> getRune() throws Exception {
 
         RuneList list = runeApiManager.getRune();
         Iterator<String> iterator = list.getData().keySet().iterator();
         List<RuneEntity> r1 = runeEntityRepository.findAll();
-        if(r1.size()==0) {
+        if (r1.size() == 0) {
             while (iterator.hasNext()) {
                 String key = iterator.next();
-                RuneEntity r = RuneEntity.of(list.getData().get(key).getId(), list.getData().get(key).getName());
+                RuneEntity r = RuneEntity.of(list.getData().get(key));
                 runeEntityRepository.save(r);
             }
-        }else if(r1.size()!=list.getData().keySet().size()){
-            for(RuneEntity ru : r1){
+        } else if (r1.size() != list.getData().keySet().size()) {
+            for (RuneEntity ru : r1) {
                 runeEntityRepository.delete(ru);
             }
             while (iterator.hasNext()) {
                 String key = iterator.next();
-                RuneEntity r = RuneEntity.of(list.getData().get(key).getId(), list.getData().get(key).getName());
+                RuneEntity r = RuneEntity.of(list.getData().get(key));
                 runeEntityRepository.save(r);
             }
 
@@ -57,42 +55,83 @@ public class RuneService {
         return runeEntityRepository.findAll();
 
     }
+
     //다시할껏
-    public HashMap<String, HashMap> Rune_summer(String id ) throws Exception{
-        Summoner summoner = summonerApiManager.getSummonerByName(Region.KR,id);
-        if(summoner==null){
+    public Map Rune_summer(String id) throws Exception {
+        Summoner summoner = summonerApiManager.getSummonerByName(Region.KR, id);
+        if (summoner == null) {
             return null;
         }
-        Map<String,RunePages> list =runeApiManager.getRune(String.valueOf(summoner.getId()));
+        int num = 0;
+        Map<String, RunePages> list = runeApiManager.getRune(String.valueOf(summoner.getId()));
         Iterator<RunePage> iter = list.get(String.valueOf(summoner.getId())).getPages().iterator();
         System.out.println(list.get(String.valueOf(summoner.getId())).getPages().iterator());
-        HashMap<String,HashMap> rune= new HashMap<>();
-        HashMap<String,Integer> slott;
-        HashMap<String,Integer> temp= new HashMap<>();
-
-        while(iter.hasNext()) {
+        HashMap<String, Integer> rune = new HashMap<>();
+        List<RuneEntityCountDto>  yellow = null;
+        List<RuneEntityCountDto> red = null;
+        List<RuneEntityCountDto>  black = null;
+        List<RuneEntityCountDto>  blue = null;
+        HashMap<String, HashMap> addRune = new HashMap<>();
+        HashMap<String, HashMap> temp = new HashMap<>();
+        Map<Integer,RunEntityListDto> r_list = new HashMap<Integer,RunEntityListDto>();
+        HashMap<Integer,RunEntityListDto> rlist = new HashMap<>();
+        List<RuneEntityCountDto> relist = null;
+        int count = 0;
+        int number=0;
+        RuneEntity name=null;
+        while (iter.hasNext()) {
+            yellow=new ArrayList<>();
+            black=new ArrayList<>();
+            red=new ArrayList<>();
+            blue=new ArrayList<>();
+            relist = new ArrayList<>();
+            rune.clear();
+            count++;
             RunePage r = iter.next();
-            Iterator<RuneSlot> slot = r.getSlots().iterator();
-            slott=new HashMap<>();
-            while (slot.hasNext()) {
-                RuneSlot s = slot.next();
-                String name=runeEntityRepository.findByRunid(s.getRuneId()).getName();
-                if(slott.get(name)==null){
-                    slott.put(name, 1);
-                }else{
-                    slott.put(name, slott.get(name) + 1);
+            if (r.getSlots()==null) {
+                r_list.put(count, RunEntityListDto.of(r.getName(), null));
+            } else {
+                Iterator<RuneSlot> slot = r.getSlots().iterator();
+                while (slot.hasNext()) {
+                    RuneSlot s = slot.next();
+                    name = runeEntityRepository.findByRunid(s.getRuneId());
+                    if (rune.containsKey(name.getName())) {
+                        rune.put(name.getName(), rune.get(name.getName()) + 1);
+                    } else {
+                        rune.put(name.getName(), 1);
+                    }
                 }
-                System.out.println("여기");
+                Iterator<String> k = rune.keySet().iterator();
+                while (k.hasNext()) {
+                    String k1 = k.next();
+                    Integer nu = rune.get(k1);
+                    RuneEntity rn = runeEntityRepository.findByName(k1);
+                    if(rn.getType().equals("red")){
+                            red.add(RuneEntityCountDto.of(k1, nu));
+                    }else if(rn.getType().equals("blue")){
+                            blue.add(RuneEntityCountDto.of(k1, nu));
+                    }else if(rn.getType().equals("black")){
+                            black.add(RuneEntityCountDto.of(k1, nu));
+                    }else if(rn.getType().equals("yellow")){
+                            yellow.add(RuneEntityCountDto.of(k1, nu));
+                    }
+
+                }
+                r_list.put(count, RunEntityListDto.of(r.getName(), RunEntityDto.of(red,yellow,blue,black)));
 
             }
-            //clone은 복재
-            temp=(HashMap)slott.clone();
-            rune.put(r.getName(), temp);
-            slott.clear();
-        }
-        System.out.println("끝");
-        return rune;
 
+        }
+
+            return r_list;
+    }
+    public void insert(HashMap h,RuneEntity runeEntity){
+        if(h.get(runeEntity.getName())==null){
+            h.put(runeEntity.getName(),1);
+        }else{
+            int k = (int)h.get(runeEntity.getName())+1;
+            h.put(runeEntity.getName(),k);
+        }
     }
 
 }

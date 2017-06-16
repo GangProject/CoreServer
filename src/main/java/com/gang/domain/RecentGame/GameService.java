@@ -254,52 +254,54 @@ public class GameService {
         List<PlayerEntity> red = new ArrayList<>();
         List<PlayerEntity> blue = new ArrayList<>();
         List<PlayerEntity> list = new ArrayList<>();
-        if(game.getTeamId()==100){
-            String champName = championEntityRepository.findByChampid(game.getChampionId()).getEname();
-            blue.add(PlayerEntity.ofMy(game,name,id,champName));
-        }else{
-            String champName = championEntityRepository.findByChampid(game.getChampionId()).getEname();
-            red.add(PlayerEntity.ofMy(game,name,id,champName));
-        }
-        while(plist.hasNext()){
-
-            Player p = plist.next();
-            //String k = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId()).getName();
-            SummonerEntity s=summonerRepository.findBySummonerId((int)p.getSummonerId());
-            String k=null;
-            if(s==null){
-                Summoner summoner = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId());
-                summonerRepository.save(SummonerEntity.of(summoner));
-                k = summoner.getName();
-            }else{
-                k=s.getName();
+        if(playerEntityRepository.findByGameid(game.getGameId()).size()==0) {
+            if (game.getTeamId() == 100) {
+                String champName = championEntityRepository.findByChampid(game.getChampionId()).getEname();
+                blue.add(PlayerEntity.ofMy(game, name, id, champName));
+            } else {
+                String champName = championEntityRepository.findByChampid(game.getChampionId()).getEname();
+                red.add(PlayerEntity.ofMy(game, name, id, champName));
             }
+            while (plist.hasNext()) {
 
-
-            //100blue
-            if(game.getTeamId()==100){
-                String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
-                if(game.getTeamId()==p.getTeamId()){
-
-                    blue.add(PlayerEntity.of(game,p,k,champName));
-                }else{
-
-                    red.add(PlayerEntity.of(game,p,k,champName));
-                }
-            }else{
-                if(game.getTeamId()==p.getTeamId()){
-                    String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
-                    red.add(PlayerEntity.of(game,p,k,champName));
-                }else{
-                    String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
-                    blue.add(PlayerEntity.of(game,p,k,champName));
+                Player p = plist.next();
+                //String k = summonerApiManager.getSummonerById(Region.KR,p.getSummonerId()).getName();
+                SummonerEntity s = summonerRepository.findBySummonerId((int) p.getSummonerId());
+                String k = null;
+                if (s == null) {
+                    Summoner summoner = summonerApiManager.getSummonerById(Region.KR, p.getSummonerId());
+                    summonerRepository.save(SummonerEntity.of(summoner));
+                    k = summoner.getName();
+                } else {
+                    k = s.getName();
                 }
 
+
+                //100blue
+                if (game.getTeamId() == 100) {
+                    String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
+                    if (game.getTeamId() == p.getTeamId()) {
+
+                        blue.add(PlayerEntity.of(game, p, k, champName));
+                    } else {
+
+                        red.add(PlayerEntity.of(game, p, k, champName));
+                    }
+                } else {
+                    if (game.getTeamId() == p.getTeamId()) {
+                        String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
+                        red.add(PlayerEntity.of(game, p, k, champName));
+                    } else {
+                        String champName = championEntityRepository.findByChampid(p.getChampionId()).getEname();
+                        blue.add(PlayerEntity.of(game, p, k, champName));
+                    }
+
+                }
             }
+            list.addAll(blue);
+            list.addAll(red);
+            playerEntityRepository.save(list);
         }
-        list.addAll(blue);
-        list.addAll(red);
-        playerEntityRepository.save(list);
     }
 
     public List<ResposeGame> recent(List<GameEntity> list){

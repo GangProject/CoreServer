@@ -1,23 +1,33 @@
 package com.gang.api;
 
+import com.gang.core.RiotApiManager;
+import com.gang.core.manager.MasteryApiManager;
+import com.gang.core.manager.RuneApiManager;
 import com.gang.core.manager.SummonerApiManager;
 import com.gang.domain.ITEM.ItemEntity;
 import com.gang.domain.ITEM.ItemService;
 import com.gang.domain.RecentGame.GameEntity;
 import com.gang.domain.RecentGame.GameService;
+import com.gang.domain.Rune.RuneEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.rithms.riot.api.RiotApi;
 import net.rithms.riot.constant.Region;
 import net.rithms.riot.dto.Game.Game;
 import net.rithms.riot.dto.Match.MatchDetail;
+import net.rithms.riot.dto.Static.Rune;
+import net.rithms.riot.dto.Static.RuneList;
+import net.rithms.riot.dto.Summoner.MasteryPages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by seungki on 2017-04-07.
@@ -36,6 +46,14 @@ public class ItemController {
     @Autowired
     private GameService gameService;
 
+
+
+    @Autowired
+    private MasteryApiManager masteryApiManager;
+
+    @Autowired
+    private RuneApiManager runeApiManager;
+
     @GetMapping(value = "/list")
     public List<ItemEntity> list() throws Exception{
         try{
@@ -47,15 +65,22 @@ public class ItemController {
 
     @ApiOperation(value = " 확인", notes = "확인용 필요없는거")
     @GetMapping(value = "/glist")
-    public MatchDetail glist(@RequestParam(name = "name") String name) throws Exception{
+    public List<RuneEntity> glist(@RequestParam(name = "name") String name) throws Exception{
         try{
             long start = System.currentTimeMillis();
-            summonerApiManager.getSummonerByName(Region.KR,"류종하");
-
+            //MasteryPages m = masteryApiManager.masteryPages(summonerApiManager.getSummonerByName(Region.KR,name).getId());
+            RuneList l= runeApiManager.getRune();
+            Iterator<String> iterator = l.getData().keySet().iterator();
+            List<RuneEntity> r = new ArrayList<>();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                Rune k =l.getData().get(key);
+                r.add(RuneEntity.of(k));
+            }
             long end = System.currentTimeMillis();
-            MatchDetail l = gameService.exam(name);
+
             System.out.println( "실행 시간 : " + ( end - start )/1000.0 );
-            return l;
+            return r;
         }catch (Exception e){
             throw e;
         }

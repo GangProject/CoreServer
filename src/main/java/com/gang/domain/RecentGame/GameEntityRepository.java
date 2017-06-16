@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface GameEntityRepository extends JpaRepository<GameEntity,Integer>{
     List<GameEntity> findBySummoneridOrderByDateDesc(long id);
+
+
 }

@@ -1,6 +1,7 @@
 package com.gang.domain.Rune;
 
 import lombok.*;
+import net.rithms.riot.dto.Static.Rune;
 import net.rithms.riot.dto.Static.RuneList;
 
 import javax.persistence.*;
@@ -28,10 +29,19 @@ public class RuneEntity {
     @Column(name = "runname")
     private String name;
 
-    public static RuneEntity of(int id,String name){
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "descript")
+    private  String descript;
+
+
+    public static RuneEntity of(Rune rune){
         return builder()
-                .name(name)
-                .runid(id)
+                .name(rune.getName())
+                .runid(rune.getId())
+                .type(rune.getRune().getType())
+                .descript(rune.getDescription())
                 .build();
     }
 }

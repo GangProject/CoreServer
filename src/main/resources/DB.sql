@@ -33,7 +33,9 @@ create table core.SpellEntity(
 create table core.RuneEntity(
    `id` int Not Null auto_increment primary Key,
     `runId` int Not Null,
-    `runName` varchar(50) Not Null
+    `runName` varchar(50) Not Null,
+    `type` VARCHAR (100) Not null,
+    `descript` VARCHAR (200) NOT null
 );
 
 create table core.ResultEntity(
