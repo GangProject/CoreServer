@@ -15,10 +15,14 @@ public enum Deceit {
 
 
     private int id;
-    private String ferocity;
+    private String dn;
 
-    Deceit(int id,String key){
+    Deceit(int id,String dn){
         this.id = id;
-        this.ferocity = ferocity;
+        this.dn = dn;
+    }
+
+    public String getDn(){
+        return dn;
     }
 }
