@@ -86,7 +86,6 @@ public class RuneService {
             blue=new ArrayList<>();
             relist = new ArrayList<>();
             rune.clear();
-            count++;
             RunePage r = iter.next();
             if (r.getSlots()==null) {
                 r_list.put(count, RunEntityListDto.of(r.getName(), null));
@@ -120,7 +119,7 @@ public class RuneService {
                 r_list.put(count, RunEntityListDto.of(r.getName(), RunEntityDto.of(red,yellow,blue,black)));
 
             }
-
+                count++;
         }
 
             return r_list;
