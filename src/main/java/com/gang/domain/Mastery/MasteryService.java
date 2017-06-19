@@ -38,10 +38,21 @@ public class MasteryService {
 
     public List<MasteryEntity> save() throws Exception{
         MasteryList m = gameApiManager.getMastery(Region.KR);
+        List<MasteryEntity> mast = masteryEntityRepository.findAll();
         Iterator<net.rithms.riot.dto.Static.Mastery> m1=m.getData().values().iterator();
-        while(m1.hasNext()){
-            Mastery m2 = m1.next();
-            masteryEntityRepository.save(MasteryEntity.of(m2));
+        if(mast.size()==0) {
+            while (m1.hasNext()) {
+                Mastery m2 = m1.next();
+                masteryEntityRepository.save(MasteryEntity.of(m2));
+            }
+        }else{
+            for(MasteryEntity m3 : mast){
+               masteryEntityRepository.delete(m3);
+            }
+            while (m1.hasNext()) {
+                Mastery m2 = m1.next();
+                masteryEntityRepository.save(MasteryEntity.of(m2));
+            }
         }
         List<MasteryEntity> m2 = masteryEntityRepository.findAll();
        return m2;
@@ -68,9 +79,10 @@ public class MasteryService {
                 int recount=0;
                 while (mp3.hasNext()) {
                     int ch = 0;
-
+                    System.out.println(mp2.getName()+"이름");
                     net.rithms.riot.dto.Summoner.Mastery m4 = mp3.next();
                     MasteryEntity mast = masteryEntityRepository.findByMid(m4.getId());
+                    System.out.println("여기");
                     for (Ferocity f : Ferocity.values()) {
                         if (f.getFname().equals(mast.getName())) {
                             ch = 1;
@@ -119,6 +131,7 @@ public class MasteryService {
                 MasteryCountDto mac = MasteryCountDto.of(mp2.getName(),"없음",ferocity, deceit, resolution);
                 mlist.add(mac);
             }
+            System.out.println("여기1");
         }
         return mlist;
     }
