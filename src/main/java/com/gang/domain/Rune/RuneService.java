@@ -57,7 +57,7 @@ public class RuneService {
     }
 
     //다시할껏
-    public Map Rune_summer(String id) throws Exception {
+    public List<RunEntityListDto> Rune_summer(String id) throws Exception {
         Summoner summoner = summonerApiManager.getSummonerByName(Region.KR, id);
         if (summoner == null) {
             return null;
@@ -73,7 +73,7 @@ public class RuneService {
         List<RuneEntityCountDto>  blue = null;
         HashMap<String, HashMap> addRune = new HashMap<>();
         HashMap<String, HashMap> temp = new HashMap<>();
-        Map<Integer,RunEntityListDto> r_list = new HashMap<Integer,RunEntityListDto>();
+        List<RunEntityListDto> r_list = new ArrayList<>();
         HashMap<Integer,RunEntityListDto> rlist = new HashMap<>();
         List<RuneEntityCountDto> relist = null;
         int count = 0;
@@ -88,7 +88,7 @@ public class RuneService {
             rune.clear();
             RunePage r = iter.next();
             if (r.getSlots()==null) {
-                r_list.put(count, RunEntityListDto.of(r.getName(), null));
+                r_list.add(RunEntityListDto.of(r.getName(), null));
             } else {
                 Iterator<RuneSlot> slot = r.getSlots().iterator();
                 while (slot.hasNext()) {
@@ -116,10 +116,10 @@ public class RuneService {
                     }
 
                 }
-                r_list.put(count, RunEntityListDto.of(r.getName(), RunEntityDto.of(red,yellow,blue,black)));
+                r_list.add(RunEntityListDto.of(r.getName(), RunEntityDto.of(red,yellow,blue,black)));
 
             }
-                count++;
+
         }
 
             return r_list;

@@ -38,11 +38,11 @@ public class RuneController {
     }
     @GetMapping("/summonerName")
     @ApiOperation(value = "소환사가 가지고 있는 룬정보",notes = "룬정보")
-    public Map rune(@RequestParam(value = "summonername") String id) throws Exception{
+    public List<RunEntityListDto> rune(@RequestParam(value = "summonername") String id) throws Exception{
         try{
-            Map h =runeService.Rune_summer(id);
+            List<RunEntityListDto> h =runeService.Rune_summer(id);
             if(h==null){
-                h.put(0,null);
+                h.add(0,null);
                 return h;
             }
             return h;

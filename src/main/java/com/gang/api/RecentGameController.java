@@ -71,7 +71,7 @@ public class RecentGameController {
     }
     @ApiOperation(value = "잘하는 라인 보기",notes = "라인2개")
     @RequestMapping(value = "/game/line",method = RequestMethod.GET)
-    public List<TopLine> game_line(@RequestParam(value = "summonername") long id) throws Exception{
+    public List<TopLine> game_line(@RequestParam(value = "summonername") String id) throws Exception{
         try {
             return gameService.Top_Line(id);
         }catch (Exception e){

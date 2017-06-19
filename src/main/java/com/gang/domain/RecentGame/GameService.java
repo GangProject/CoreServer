@@ -26,6 +26,7 @@ import net.rithms.riot.dto.Summoner.Summoner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -630,7 +631,15 @@ public class GameService {
         }
     }
 
-    public List<TopLine> Top_Line(long id){
+    @Transactional
+    public List<TopLine> Top_Line(String name) throws Exception{
+        Summoner s = summonerApiManager.getSummonerByName(Region.KR,name);
+        List<TopLine> list = new ArrayList<>();
+        if(s==null){
+            list.add(new TopLine("소환사가 없습니다",0));
+            return list;
+        }
+        long id = s.getId();
         Mid2 mid = midRepository.findByplayerid(id);
         Bottom bottom = bottomRepository.findByplayerid(id);
         Junggle junggle = junggleRepository.findByplayerid(id);
@@ -663,7 +672,7 @@ public class GameService {
         p.add(new TopLine("정글",junggle_percent));
         p.add(new TopLine("탑",top_percent));
 
-        List<TopLine> list = new ArrayList<>();
+
         p.poll();
         p.poll();
         list.add(p.poll());
